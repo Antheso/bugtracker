@@ -1,0 +1,32 @@
+:host {
+  display: flex;
+  flex: 1;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  &__form {
+    width: 400px;
+    padding: 40px;
+    background: #2f2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  &__field {
+    margin-bottom: 20px;
+    width: 100%;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

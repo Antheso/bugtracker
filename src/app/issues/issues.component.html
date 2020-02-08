@@ -1,0 +1,84 @@
+<div class="issues">
+  <div class="issues__search">
+    <mat-form-field [formGroup]="searchForm"
+      class="issues__field">
+      <input matInput
+        type="text"
+        formControlName="search"
+        placeholder="Search">
+      <button mat-button
+        *ngIf="searchForm.value.search"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="resetFilter()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <button mat-icon-button
+      aria-label="Search"
+      (click)="searchTasks()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+  <table mat-table
+    [dataSource]="dataSource"
+    class="issues__table">
+    <ng-container matColumnDef="select">
+      <th mat-header-cell
+        *matHeaderCellDef
+        class="issues__column_checkbox">
+        <mat-checkbox (change)="$event ? masterToggle() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+          [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell
+        *matCellDef="let row"
+        class="issues__column_checkbox">
+        <mat-checkbox (click)="$event.stopPropagation()"
+          (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)"
+          [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="id">
+      <th mat-header-cell
+        *matHeaderCellDef
+        class="issues__column_id">
+        ID
+      </th>
+      <td mat-cell
+        *matCellDef="let element"
+        class="issues__column_id"
+        (click)="goToTask(element.id)">
+        {{ element.id }}
+      </td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell
+        *matHeaderCellDef
+        class="issues__column_name">
+        Name
+      </th>
+      <td mat-cell
+        *matCellDef="let element"
+        class="issues__column_name">
+        {{ element.name }}
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row
+      *matHeaderRowDef="displayedColumns">
+    </tr>
+    <tr mat-row
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="selection.toggle(row)">
+    </tr>
+  </table>
+</div>

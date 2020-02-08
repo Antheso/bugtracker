@@ -1,0 +1,7 @@
+<div class="theme-picker">
+  <div class="theme-picker__theme"
+    [style.background-color]="themes[theme].backgroundColor"
+    *ngFor="let theme of themesList"
+    (click)="selectTheme(theme)">
+  </div>
+</div>

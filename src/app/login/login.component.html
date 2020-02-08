@@ -1,0 +1,28 @@
+<div class="login">
+  <form class="login__form"
+    (ngSubmit)="login()"
+    [formGroup]="loginForm">
+    <mat-form-field class="login__field">
+      <mat-label class="login__label">
+        Login
+      </mat-label>
+      <input class="login__input"
+        matInput
+        placeholder="Login"
+        formControlName="login">
+    </mat-form-field>
+
+    <mat-form-field class="login__field">
+      <mat-label class="login__label">
+        Password
+      </mat-label>
+      <input class="login__input"
+        matInput
+        placeholder="Login"
+        type="password"
+        formControlName="password">
+    </mat-form-field>
+
+    <button mat-raised-button>Login</button>
+  </form>
+</div>

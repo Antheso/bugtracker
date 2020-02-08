@@ -1,0 +1,52 @@
+:host {
+  flex: 1;
+}
+
+.ticket {
+  padding: 60px 80px;
+
+  &__form {
+    display: flex;
+  }
+
+  &__textarea {
+    overflow: hidden;
+    min-height: 100px;
+  }
+
+  &__col {
+    width: 400px;
+    flex-shrink: 0;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-right: 100px;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+  }
+
+  &__button:first-child {
+    margin-right: 30px;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+
+  &__name {
+    display: block;
+    width: 50%;
+  }
+
+  &__select {
+    width: 50%;
+  }
+}

@@ -1,0 +1,126 @@
+<div class="ticket">
+  <form class="ticket__form"
+    [formGroup]="ticketForm"
+    (ngSubmit)="submit()">
+    <div class="ticket__content">
+      <mat-form-field>
+        <mat-label>Project name</mat-label>
+
+        <input class="ticket__input"
+          type="text"
+          matInput
+          formControlName="projectName"
+          [matAutocomplete]="projectAuto">
+
+        <mat-autocomplete #projectAuto="matAutocomplete"
+          [displayWith]="displayProjectFn">
+          <mat-option *ngFor="let option of filteredProjectOptions | async"
+            [value]="option">
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>
+          Summary
+        </mat-label>
+        <input matInput
+          placeholder="Summary"
+          formControlName="summary">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea class="ticket__textarea"
+          matTextareaAutosize
+          matInput
+          formControlName="description"
+          placeholder="Description"></textarea>
+      </mat-form-field>
+
+      <div class="ticket__controls">
+        <ng-container *ngIf="!readonly; else editBlock">
+          <button class="ticket__button"
+            color="primary"
+            mat-raised-button>
+            Save
+          </button>
+          <button class="ticket__button"
+            mat-raised-button
+            (click)="cancel($event)">
+            Cancel
+          </button>
+        </ng-container>
+
+        <ng-template #editBlock>
+          <button class="ticket__button"
+            color="primary"
+            mat-raised-button
+            (click)="edit($event)">
+            Edit
+          </button>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="ticket__col">
+      <div class="row">
+        <span class="row__name">Priority</span>
+        <mat-form-field class="row__select">
+          <select matNativeControl required formControlName="priority">
+            <option *ngFor="let option of priorityOptions"
+              [value]="option.value">
+              {{ option.name }}
+            </option>
+          </select>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <span class="row__name">Type</span>
+        <mat-form-field class="row__select">
+          <select matNativeControl required formControlName="type">
+            <option *ngFor="let option of typeOptions"
+              [value]="option.value">
+              {{ option.name }}
+            </option>
+          </select>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <span class="row__name">State</span>
+        <mat-form-field class="row__select">
+          <select matNativeControl required formControlName="state">
+            <option *ngFor="let option of stateOptions"
+              [value]="option.value">
+              {{ option.name }}
+            </option>
+          </select>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <span class="row__name">Assignee</span>
+        <mat-form-field>
+          <mat-label>Assignee name</mat-label>
+
+          <input class="ticket__input"
+            type="text"
+            matInput
+            formControlName="assignee"
+            [matAutocomplete]="assigneeAuto">
+
+          <mat-autocomplete #assigneeAuto="matAutocomplete"
+            [displayWith]="displayAssigneeFn">
+            <mat-option *ngFor="let option of filteredAssigneeOptions | async"
+              [value]="option">
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>
