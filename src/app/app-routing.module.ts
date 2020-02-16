@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { LoginComponent } from './login';
-import { TicketComponent } from './ticket';
-import { IssuesComponent } from './issues';
+import { TicketComponent, TicketResolver } from './ticket';
+import { IssuesComponent, IssuesResolver } from './issues';
 
 const routes: Routes = [
   {
@@ -13,14 +13,17 @@ const routes: Routes = [
   {
     path: 'issues',
     component: IssuesComponent,
+    resolve: [ IssuesResolver ]
   },
   {
     path: 'create-ticket',
-    component: TicketComponent
+    component: TicketComponent,
+    resolve: [ TicketResolver ]
   },
   {
-    path: 'watch-ticket',
+    path: 'watch-ticket/:ticketId',
     component: TicketComponent,
+    resolve: [ TicketResolver ],
     data: {
       readonly: true
     }

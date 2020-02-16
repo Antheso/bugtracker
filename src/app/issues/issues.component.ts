@@ -4,33 +4,12 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormControl, FormGroup } from '@angular/forms';
 
+import { IssuesService } from './issues.service';
+
 export interface IIssue {
   id: string;
   name: string;
 }
-
-const ISSUES_DATA: IIssue[] = [
-  {
-    id: 'MS-34',
-    name: 'Export UI'
-  },
-  {
-    id: 'MS-35',
-    name: 'Sort data results'
-  },
-  {
-    id: 'MS-36',
-    name: 'New kard'
-  },
-  {
-    id: 'MS-37',
-    name: 'Ui design'
-  },
-  {
-    id: 'MS-38',
-    name: 'List sorting'
-  }
-];
 
 @Component({
   selector: 'bg-issues',
@@ -40,14 +19,15 @@ const ISSUES_DATA: IIssue[] = [
 export class IssuesComponent {
 
   displayedColumns: string[] = ['select', 'id', 'name'];
-  dataSource = new MatTableDataSource<IIssue>(ISSUES_DATA);
+  dataSource = new MatTableDataSource<IIssue>(this.issuesSrv.issuesList$.getValue());
   selection = new SelectionModel<IIssue>(true, []);
   searchForm = new FormGroup({
     search: new FormControl('')
   });
 
   constructor(
-    private router: Router
+    private router: Router,
+    private issuesSrv: IssuesService
   ) {}
 
   isAllSelected() {
@@ -69,13 +49,13 @@ export class IssuesComponent {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row`;
   }
 
-  goToTask(_taskId: string): void {
-    this.router.navigateByUrl('/watch-ticket');
+  goToTask(taskId: string): void {
+    this.router.navigateByUrl(`/watch-ticket/${taskId}`);
   }
 
   searchTasks(): void {
     this.dataSource.filter = this.searchForm.value.search || '';
-    this.dataSource._filterData(ISSUES_DATA)
+    this.dataSource._filterData(this.issuesSrv.issuesList$.getValue())
   }
 
   resetFilter(): void {

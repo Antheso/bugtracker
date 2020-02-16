@@ -1,9 +1,12 @@
+import { ISelectOption } from '../core/interfaces';
+
 export interface ITask {
-  project: string;
+  id: string;
+  project: ISelectOption;
   summary: string;
   description: string;
   priority: string;
   type: string;
   state: string;
-  assignee: string;
+  assignee: ISelectOption;
 }

@@ -9,11 +9,11 @@
         <input class="ticket__input"
           type="text"
           matInput
-          formControlName="projectName"
+          formControlName="project"
           [matAutocomplete]="projectAuto">
 
         <mat-autocomplete #projectAuto="matAutocomplete"
-          [displayWith]="displayProjectFn">
+          [displayWith]="displayItemFn">
           <mat-option *ngFor="let option of filteredProjectOptions | async"
             [value]="option">
             {{ option.name }}
@@ -68,7 +68,7 @@
       <div class="row">
         <span class="row__name">Priority</span>
         <mat-form-field class="row__select">
-          <select matNativeControl required formControlName="priority">
+          <select matNativeControl required formControlName="priorityId">
             <option *ngFor="let option of priorityOptions"
               [value]="option.value">
               {{ option.name }}
@@ -80,7 +80,7 @@
       <div class="row">
         <span class="row__name">Type</span>
         <mat-form-field class="row__select">
-          <select matNativeControl required formControlName="type">
+          <select matNativeControl required formControlName="typeId">
             <option *ngFor="let option of typeOptions"
               [value]="option.value">
               {{ option.name }}
@@ -92,7 +92,7 @@
       <div class="row">
         <span class="row__name">State</span>
         <mat-form-field class="row__select">
-          <select matNativeControl required formControlName="state">
+          <select matNativeControl required formControlName="statusId">
             <option *ngFor="let option of stateOptions"
               [value]="option.value">
               {{ option.name }}
@@ -113,7 +113,7 @@
             [matAutocomplete]="assigneeAuto">
 
           <mat-autocomplete #assigneeAuto="matAutocomplete"
-            [displayWith]="displayAssigneeFn">
+            [displayWith]="displayItemFn">
             <mat-option *ngFor="let option of filteredAssigneeOptions | async"
               [value]="option">
               {{ option.name }}

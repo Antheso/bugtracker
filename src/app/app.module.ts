@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import {
    MatInputModule,
@@ -43,7 +44,8 @@ import { IssuesComponent } from './issues';
       MatAutocompleteModule,
       MatTableModule,
       MatCheckboxModule,
-      MatIconModule
+      MatIconModule,
+      HttpClientModule
    ],
    providers: [],
    bootstrap: [
