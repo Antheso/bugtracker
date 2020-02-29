@@ -54,7 +54,7 @@
       <td mat-cell
         *matCellDef="let element"
         class="issues__column_id"
-        (click)="goToTask(element.id)">
+        (click)="goToTask($event, element.id)">
         {{ element.id }}
       </td>
     </ng-container>

@@ -7,6 +7,11 @@ import { IssuesComponent, IssuesResolver } from './issues';
 
 const routes: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: '/issues'
+  },
+  {
     path: 'login',
     component: LoginComponent
   },

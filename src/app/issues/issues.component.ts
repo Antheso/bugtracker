@@ -49,7 +49,8 @@ export class IssuesComponent {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row`;
   }
 
-  goToTask(taskId: string): void {
+  goToTask(event: MouseEvent, taskId: string): void {
+    event.stopPropagation();
     this.router.navigateByUrl(`/watch-ticket/${taskId}`);
   }
 

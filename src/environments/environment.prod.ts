@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:4444'
+  apiUrl: 'http://6d864cad.eu.ngrok.io'
 };
