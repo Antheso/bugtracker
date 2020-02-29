@@ -21,6 +21,10 @@ import {
 } from './core/components';
 import { TicketComponent } from './ticket';
 import { IssuesComponent } from './issues';
+import { RegistrationComponent } from './registration';
+import { Page404Component } from './page404';
+import { Page500Component } from './page500';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
    declarations: [
@@ -30,7 +34,10 @@ import { IssuesComponent } from './issues';
       TicketComponent,
       FooterComponent,
       ThemePickerComponent,
-      IssuesComponent
+      IssuesComponent,
+      RegistrationComponent,
+      Page404Component,
+      Page500Component
    ],
    imports: [
       BrowserModule,
@@ -43,7 +50,8 @@ import { IssuesComponent } from './issues';
       MatTableModule,
       MatCheckboxModule,
       MatIconModule,
-      HttpClientModule
+      HttpClientModule,
+      SharedModule
    ],
    providers: [],
    bootstrap: [

@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  flex: 1;
+}
+
+.registration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  &__form {
+    width: 400px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  &__field {
+    width: 100%;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

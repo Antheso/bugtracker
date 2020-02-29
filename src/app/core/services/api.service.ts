@@ -1,5 +1,6 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -14,7 +15,8 @@ export type BgErrorCatch = (err: HttpErrorResponse) => Observable<any>;
 export class ApiService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   public get(url: string, params: any = {}, catcher?: BgErrorCatch): Observable<any> {
@@ -46,11 +48,19 @@ export class ApiService {
       return catcher(resp);
     }
 
+    console.error(resp.error);
     switch (resp.status) {
       case 403:
+        this.router.navigateByUrl('/login');
+
+        return of(void 0);
+      case 404:
+        this.router.navigateByUrl('/page-404');
+
         return of(void 0);
       default:
-        console.error(resp.error);
+        this.router.navigateByUrl('/page-500');
+
         return of(void 0);
     }
   }

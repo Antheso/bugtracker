@@ -4,6 +4,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login';
 import { TicketComponent, TicketResolver } from './ticket';
 import { IssuesComponent, IssuesResolver } from './issues';
+import { RegistrationComponent } from './registration';
+import { Page404Component } from './page404';
+import { Page500Component } from './page500';
 
 const routes: Routes = [
   {
@@ -14,6 +17,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'registration',
+    component: RegistrationComponent
   },
   {
     path: 'issues',
@@ -32,6 +39,15 @@ const routes: Routes = [
     data: {
       readonly: true
     }
+  },
+  {
+    path: 'page-500',
+    component: Page500Component
+  },
+  {
+    path: '**',
+    pathMatch: 'full',
+    component: Page404Component
   }
 ];
 

@@ -1,0 +1,59 @@
+<div class="registration">
+  <form class="registration__form"
+    (ngSubmit)="register()"
+    [formGroup]="registrationForm">
+    <mat-form-field class="registration__field">
+      <mat-label class="registration__label">
+        Login
+      </mat-label>
+      <input class="registration__input"
+        matInput
+        placeholder="Login"
+        formControlName="login">
+    </mat-form-field>
+
+    <mat-form-field class="registration__field">
+      <mat-label class="registration__label">
+        Password
+      </mat-label>
+      <input class="registration__input"
+        matInput
+        placeholder="Password"
+        type="password"
+        formControlName="password">
+    </mat-form-field>
+
+    <mat-form-field class="registration__field">
+      <mat-label class="registration__label">
+        Repeat password
+      </mat-label>
+      <input class="registration__input"
+        matInput
+        placeholder="Password"
+        type="password"
+        formControlName="passwordRepeat">
+    </mat-form-field>
+
+    <mat-form-field class="registration__field">
+      <mat-label class="registration__label">
+        First name
+      </mat-label>
+      <input class="registration__input"
+        matInput
+        placeholder="First name"
+        formControlName="firstName">
+    </mat-form-field>
+
+    <mat-form-field class="registration__field">
+      <mat-label class="registration__label">
+        Last name
+      </mat-label>
+      <input class="registration__input"
+        matInput
+        placeholder="Last name"
+        formControlName="lastName">
+    </mat-form-field>
+
+    <button mat-raised-button>Register</button>
+  </form>
+</div>
