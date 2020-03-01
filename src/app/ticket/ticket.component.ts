@@ -7,7 +7,8 @@ import { map, tap } from 'rxjs/operators'
 
 import { ISelectOption } from '../core/interfaces';
 import { TicketService } from './ticket.service';
-import { ITask } from './interfaces';
+import { ITask, IComment } from './interfaces';
+import { PreloaderService } from '../core/components';
 
 @Component({
   selector: 'bg-ticket',
@@ -24,12 +25,16 @@ export class TicketComponent {
   readonly = this.route.snapshot.data.readonly;
   filteredProjectOptions: Observable<ISelectOption[]>;
   filteredAssigneeOptions: Observable<ISelectOption[]>;
+  comments: IComment[] = [];
+
+  private currentTicket: ITask;
 
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private ticketSrv: TicketService
+    private ticketSrv: TicketService,
+    private preloaderSrv: PreloaderService
   ) {
     this.projectOptions = this.ticketSrv.projectOptions$.getValue();
     this.priorityOptions = this.ticketSrv.priorityOptions$.getValue();
@@ -41,7 +46,9 @@ export class TicketComponent {
 
   ngOnInit() {
     if (this.route.snapshot.data.readonly) {
-      this.ticketForm.patchValue(this.ticketSrv.task$.getValue());
+      this.currentTicket = this.ticketSrv.task$.getValue();
+      this.comments = this.ticketSrv.comments$.getValue();
+      this.ticketForm.patchValue(this.currentTicket);
     }
 
     this.filteredProjectOptions = this.ticketForm.controls.project.valueChanges
@@ -64,28 +71,33 @@ export class TicketComponent {
   submit(): void {
     if (this.route.snapshot.data.readonly) {
       const task = <ITask>this.ticketForm.value;
-      task.id = this.ticketSrv.task$.getValue().id;
+      task.id = this.currentTicket.id;
 
-      this.ticketSrv.patchTask(task).subscribe(() => this.router.navigateByUrl('/issues'));
+      this.preloaderSrv.isBusy$.next(true);
+      this.ticketSrv.patchTask(task).subscribe(() => {
+        this.preloaderSrv.isBusy$.next(false);
+        this.router.navigateByUrl('/issues');
+      });
       return;
     }
 
-    this.ticketSrv.createTask(<ITask>this.ticketForm.value).subscribe(() => this.ticketForm.reset({
-      project: this.projectOptions[0],
-      description: '',
-      summary: '',
-      priorityId: this.priorityOptions[0].value,
-      typeId: this.typeOptions[0].value,
-      statusId: this.stateOptions[0].value,
-      assignee: this.assigneeOptions[0]
-    }))
+    this.preloaderSrv.isBusy$.next(true);
+    this.ticketSrv.createTask(<ITask>this.ticketForm.value).subscribe(() => {
+      this.preloaderSrv.isBusy$.next(false);
+      this.initForm();
+    })
   }
 
   cancel(event: MouseEvent): void {
     event.preventDefault();
 
     if (this.route.snapshot.data.readonly) {
-      this.ticketForm.disable();
+      this.ticketForm.patchValue(this.currentTicket);
+      Object.entries(this.ticketForm.controls).forEach(([key, value]) => {
+        if (key !== 'comment') {
+          value.disable();
+        }
+      });
       this.readonly = true;
     } else {
       this.router.navigateByUrl('/issues');
@@ -96,6 +108,25 @@ export class TicketComponent {
     this.readonly = false;
 
     this.ticketForm.enable();
+  }
+
+  addComment(): void {
+    const comment = {
+      text: this.ticketForm.get('comment').value,
+      user: {
+        name: 'Bohdan',
+        id: '5ab8d9db-a014-41cd-a485-79d79caaa9a1'
+      },
+      timestamp: +new Date(),
+      issueId: this.currentTicket.id
+    };
+
+    this.preloaderSrv.isBusy$.next(true);
+    this.ticketSrv.createComment(comment).subscribe(() => {
+      this.preloaderSrv.isBusy$.next(false);
+      this.comments.push(comment);
+      this.ticketForm.get('comment').reset();
+    });
   }
 
   private initForm(): void {
@@ -128,6 +159,7 @@ export class TicketComponent {
         value: this.assigneeOptions[0],
         disabled: this.readonly
       }),
+      comment: new FormControl('')
     });
   }
 

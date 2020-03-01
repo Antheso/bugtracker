@@ -6,7 +6,7 @@ import { TicketComponent, TicketResolver } from './ticket';
 import { IssuesComponent, IssuesResolver } from './issues';
 import { RegistrationComponent } from './registration';
 import { Page404Component } from './page404';
-import { Page500Component } from './page500';
+import { Page403Component } from './page403';
 
 const routes: Routes = [
   {
@@ -41,8 +41,8 @@ const routes: Routes = [
     }
   },
   {
-    path: 'page-500',
-    component: Page500Component
+    path: 'page-403',
+    component: Page403Component
   },
   {
     path: '**',

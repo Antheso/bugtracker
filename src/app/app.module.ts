@@ -17,13 +17,15 @@ import { LoginComponent } from './login';
 import {
    HeaderComponent,
    FooterComponent,
-   ThemePickerComponent
+   ThemePickerComponent,
+   ErrorComponent,
+   PreloaderComponent
 } from './core/components';
 import { TicketComponent } from './ticket';
 import { IssuesComponent } from './issues';
 import { RegistrationComponent } from './registration';
 import { Page404Component } from './page404';
-import { Page500Component } from './page500';
+import { Page403Component } from './page403';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -37,7 +39,9 @@ import { SharedModule } from './shared/shared.module';
       IssuesComponent,
       RegistrationComponent,
       Page404Component,
-      Page500Component
+      Page403Component,
+      ErrorComponent,
+      PreloaderComponent
    ],
    imports: [
       BrowserModule,

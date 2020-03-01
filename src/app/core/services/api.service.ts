@@ -6,6 +6,8 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
+import { ErrorService } from '../components/error';
+import { PreloaderService } from '../components/preloader';
 
 export type BgErrorCatch = (err: HttpErrorResponse) => Observable<any>;
 
@@ -16,7 +18,9 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private errorSrv: ErrorService,
+    private preloaderSrv: PreloaderService
   ) { }
 
   public get(url: string, params: any = {}, catcher?: BgErrorCatch): Observable<any> {
@@ -49,9 +53,14 @@ export class ApiService {
     }
 
     console.error(resp.error);
+    this.preloaderSrv.isBusy$.next(false);
     switch (resp.status) {
-      case 403:
+      case 401:
         this.router.navigateByUrl('/login');
+
+        return of(void 0);
+      case 403:
+        this.router.navigateByUrl('/page-403');
 
         return of(void 0);
       case 404:
@@ -59,7 +68,7 @@ export class ApiService {
 
         return of(void 0);
       default:
-        this.router.navigateByUrl('/page-500');
+        this.errorSrv.hasError = true;
 
         return of(void 0);
     }

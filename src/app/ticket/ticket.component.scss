@@ -35,6 +35,29 @@
   &__button:first-child {
     margin-right: 30px;
   }
+
+  &__preview {
+    position: relative;
+    top: -4px;
+
+    &_disabled {
+      opacity: 0.75;
+    }
+  }
+
+  &__label {
+    opacity: 0.8;
+    margin-bottom: 4px;
+    display: block;
+    transform: scale(.75);
+    transform-origin: left;
+  }
+
+  &__comments {
+    display: flex;
+    flex-direction: column;
+    margin-top: 60px;
+  }
 }
 
 .row {
@@ -48,5 +71,31 @@
 
   &__select {
     width: 50%;
+  }
+}
+
+.comment {
+  margin-bottom: 20px;
+
+  &__info {
+    margin-bottom: 5px;
+  }
+
+  &__username {
+    font-size: 14px;
+    color: #7979ff;
+    display: inline-block;
+  }
+
+  &__time {
+    font-size: 14px;
+  }
+
+  &__formfield {
+    width: 100%;
+  }
+
+  &__preview {
+    margin-top: 40px;
   }
 }

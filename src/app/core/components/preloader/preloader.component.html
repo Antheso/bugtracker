@@ -1,0 +1,13 @@
+<div class="busy" *ngIf="!resolved || (isBusy$ | async)">
+  <div class="busy__inner">
+    <div class="busy__spinner">
+      <div class="busy__spinner-rect1"></div>
+      <div class="busy__spinner-rect2"></div>
+      <div class="busy__spinner-rect3"></div>
+      <div class="busy__spinner-rect4"></div>
+      <div class="busy__spinner-rect5"></div>
+    </div>
+  </div>
+</div>
+
+<div class="preloader" *ngIf="!resolved"></div>

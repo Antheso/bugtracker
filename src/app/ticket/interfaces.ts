@@ -10,3 +10,13 @@ export interface ITask {
   state: string;
   assignee: ISelectOption;
 }
+
+export interface IComment {
+  timestamp: number;
+  user: {
+    name: string;
+    id: string;
+  };
+  text: string;
+  issueId: string;
+}

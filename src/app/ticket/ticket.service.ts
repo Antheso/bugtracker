@@ -4,7 +4,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 
 import { ApiService } from '../core/services';
-import { ITask } from './interfaces';
+import { ITask, IComment } from './interfaces';
 import { ISelectOption } from '../core/interfaces';
 
 type IOptionsMap = Array<{
@@ -18,6 +18,7 @@ type IOptionsMap = Array<{
 export class TicketService {
 
   public task$ = new BehaviorSubject<ITask>(void 0);
+  public comments$ = new BehaviorSubject<IComment[]>([]);
   public projectOptions$ = new BehaviorSubject<ISelectOption[]>([]);
   public priorityOptions$ = new BehaviorSubject<ISelectOption[]>([]);
   public statusOptions$ = new BehaviorSubject<ISelectOption[]>([]);
@@ -116,6 +117,16 @@ export class TicketService {
 
   patchTask(task: ITask): Observable<void> {
     return this.api.patch(`api/issues/${task.id}`, task);
+  }
+
+  fetchComments(id: string): Observable<IComment[]> {
+    return this.api.get(`api/comments/${id}`).pipe(
+      tap(comments => this.comments$.next(comments))
+    );
+  }
+
+  createComment(comment: IComment): Observable<void> {
+    return this.api.post(`api/comments`, comment);
   }
 
   private mapToSelectOption(options: any[], optionsMap: IOptionsMap): ISelectOption[] {

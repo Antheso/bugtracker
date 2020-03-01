@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { ApiService } from '../core/services';
+import { PreloaderService } from '../core/components';
+
 @Component({
   selector: 'bg-login',
   templateUrl: './login.component.html',
@@ -15,12 +18,18 @@ export class LoginComponent {
   });
 
   constructor(
-    private router: Router
+    private router: Router,
+    private api: ApiService,
+    private preloaderSrv: PreloaderService
   ) { }
 
   login(): void {
-    console.log(this.loginForm.value);
-    this.router.navigateByUrl('/');
+    this.preloaderSrv.isBusy$.next(true);
+    this.api.post('api/login', this.loginForm.value).subscribe(() => {
+      this.preloaderSrv.isBusy$.next(false);
+
+      this.router.navigateByUrl('/');
+    });
   }
 
 }
