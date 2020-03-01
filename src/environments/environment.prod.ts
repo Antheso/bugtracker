@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://6d864cad.eu.ngrok.io'
+  apiUrl: 'https://javalin-html-forms-example.herokuapp.com'
 };

@@ -1,6 +1,6 @@
 {
   "/api/**": {
-    "target": "http://6d864cad.eu.ngrok.io",
+    "target": "https://javalin-html-forms-example.herokuapp.com",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
