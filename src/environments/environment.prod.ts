@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://javalin-html-forms-example.herokuapp.com'
+  apiUrl: 'https://t1.sumdu-tss.site'
 };
