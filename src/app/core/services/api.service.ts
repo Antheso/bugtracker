@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, pluck } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { ErrorService } from '../components/error';
@@ -25,24 +25,28 @@ export class ApiService {
 
   public get(url: string, params: any = {}, catcher?: BgErrorCatch): Observable<any> {
     return this.http.get(`${environment.apiUrl}/${url}`, { params }).pipe(
+      pluck('data'),
       catchError(err => this.errorCatch(err, catcher))
     );
   }
 
   public post(url: string, data: any, catcher?: BgErrorCatch): Observable<any> {
     return this.http.post(`${environment.apiUrl}/${url}`, data).pipe(
+      pluck('data'),
       catchError(err => this.errorCatch(err, catcher))
     );
   }
 
   public patch(url: string, data: any, catcher?: BgErrorCatch): Observable<any> {
     return this.http.patch(`${environment.apiUrl}/${url}`, data).pipe(
+      pluck('data'),
       catchError(err => this.errorCatch(err, catcher))
     );
   }
 
   public del(url: string, catcher?: BgErrorCatch): Observable<any> {
     return this.http.delete(`${environment.apiUrl}/${url}`).pipe(
+      pluck('data'),
       catchError(err => this.errorCatch(err, catcher))
     );
   }
