@@ -15,7 +15,7 @@ export interface IComment {
   timestamp: number;
   user: {
     name: string;
-    id: string;
+    userId: string;
   };
   text: string;
   issueId: string;

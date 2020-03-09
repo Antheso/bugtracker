@@ -12,7 +12,8 @@ import { PreloaderService } from '../core/components';
 
 export interface IIssue {
   id: string;
-  name: string;
+  summary: string;
+  number: string;
 }
 
 @Component({
@@ -22,7 +23,7 @@ export interface IIssue {
 })
 export class IssuesComponent {
 
-  displayedColumns: string[] = ['select', 'id', 'name', 'delete'];
+  displayedColumns: string[] = ['select', 'number', 'summary', 'delete'];
   dataSource = new MatTableDataSource<IIssue>(this.issuesSrv.issuesList$.getValue());
   selection = new SelectionModel<IIssue>(true, []);
   searchForm = new FormGroup({
@@ -71,7 +72,7 @@ export class IssuesComponent {
 
   deleteIssues(): void {
     this.preloaderSrv.isBusy$.next(true);
-    forkJoin(this.selection.selected.map(issue => this.issuesSrv.deleteIssue(issue.id))).pipe(
+    forkJoin(this.selection.selected.map(issue => this.issuesSrv.deleteIssue(issue.number))).pipe(
       switchMapTo(this.issuesSrv.fetchIssues())
     ).subscribe(() => {
       this.preloaderSrv.isBusy$.next(false);
