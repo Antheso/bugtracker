@@ -4,7 +4,11 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormControl, FormGroup } from '@angular/forms';
 
+import { forkJoin } from 'rxjs';
+import { switchMapTo } from 'rxjs/operators';
+
 import { IssuesService } from './issues.service';
+import { PreloaderService } from '../core/components';
 
 export interface IIssue {
   id: string;
@@ -18,7 +22,7 @@ export interface IIssue {
 })
 export class IssuesComponent {
 
-  displayedColumns: string[] = ['select', 'id', 'name'];
+  displayedColumns: string[] = ['select', 'id', 'name', 'delete'];
   dataSource = new MatTableDataSource<IIssue>(this.issuesSrv.issuesList$.getValue());
   selection = new SelectionModel<IIssue>(true, []);
   searchForm = new FormGroup({
@@ -27,7 +31,8 @@ export class IssuesComponent {
 
   constructor(
     private router: Router,
-    private issuesSrv: IssuesService
+    private issuesSrv: IssuesService,
+    private preloaderSrv: PreloaderService
   ) {}
 
   isAllSelected() {
@@ -62,6 +67,33 @@ export class IssuesComponent {
   resetFilter(): void {
     this.searchForm.reset();
     this.searchTasks();
+  }
+
+  deleteIssues(): void {
+    this.preloaderSrv.isBusy$.next(true);
+    forkJoin(this.selection.selected.map(issue => this.issuesSrv.deleteIssue(issue.id))).pipe(
+      switchMapTo(this.issuesSrv.fetchIssues())
+    ).subscribe(() => {
+      this.preloaderSrv.isBusy$.next(false);
+      this.refreshDataSource();
+    });
+  }
+
+  deleteIssue(id: string): void {
+    event.stopPropagation();
+
+    this.preloaderSrv.isBusy$.next(true);
+    this.issuesSrv.deleteIssue(id).pipe(
+      switchMapTo(this.issuesSrv.fetchIssues())
+    ).subscribe(() => {
+      this.preloaderSrv.isBusy$.next(false);
+      this.refreshDataSource();
+    });
+  }
+
+  private refreshDataSource(): void {
+    this.dataSource = new MatTableDataSource<IIssue>(this.issuesSrv.issuesList$.getValue());
+    this.selection = new SelectionModel<IIssue>(true, []);
   }
 
 }

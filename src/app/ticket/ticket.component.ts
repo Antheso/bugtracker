@@ -27,8 +27,11 @@ export class TicketComponent {
   filteredAssigneeOptions: Observable<ISelectOption[]>;
   comments: IComment[] = [];
 
-  private currentTicket: ITask;
+  get activeRoute(): ActivatedRoute {
+    return this.route;
+  }
 
+  private currentTicket: ITask;
 
   constructor(
     private route: ActivatedRoute,

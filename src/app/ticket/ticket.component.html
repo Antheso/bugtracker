@@ -69,7 +69,7 @@
         </ng-template>
       </div>
 
-      <div class="ticket__comments">
+      <div class="ticket__comments" *ngIf="activeRoute.snapshot.data.readonly">
         <div class="comment" *ngFor="let comment of comments">
           <div class="comment__info">
             <span class="comment__username">{{ comment.user?.name }}</span>

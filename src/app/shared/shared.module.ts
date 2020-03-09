@@ -2,16 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MarkdownComponent } from './markdown';
+import { SanitizerPipe } from './pipes';
 
 @NgModule({
   imports: [
     CommonModule
   ],
   declarations: [
-    MarkdownComponent
+    MarkdownComponent,
+    SanitizerPipe
   ],
   exports: [
-    MarkdownComponent
+    MarkdownComponent,
+    SanitizerPipe
   ]
 })
 export class SharedModule { }

@@ -1,5 +1,4 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'bg-markdown',
@@ -9,18 +8,22 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class MarkdownComponent {
 
-  @Input() text = '';
+  private _text = '';
 
-  get compiledText(): SafeHtml {
+  @Input() set text(v: string) {
+    this._text = v;
+  };
+
+  get text(): string {
+    return this._text;
+  }
+
+  get compiledText(): string {
     if (!this.text) {
       return '';
     }
 
-    return this.sanitizer.bypassSecurityTrustHtml(JSON.stringify(window['marked'](this.text)).replace(/\\n/g, '<br>').slice(1, -1));
+    return JSON.stringify(window['marked'](this.text.replace(/\</g, '&lt;'))).replace(/\\n/g, '<br>').slice(1, -1);
   }
-
-  constructor(
-    private sanitizer: DomSanitizer
-  ) { }
 
 }

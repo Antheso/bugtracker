@@ -1,6 +1,6 @@
 {
   "/api/**": {
-    "target": "http://80d63b99.eu.ngrok.io",
+    "target": "https://t1.sumdu-tss.site",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

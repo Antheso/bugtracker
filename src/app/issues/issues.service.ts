@@ -23,4 +23,8 @@ export class IssuesService {
     );
   }
 
+  deleteIssue(issueId: string): Observable<void> {
+    return this.api.del(`api/issues/${issueId}`)
+  }
+
 }
