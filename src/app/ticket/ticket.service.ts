@@ -116,7 +116,7 @@ export class TicketService {
   }
 
   patchTask(task: ITask): Observable<void> {
-    return this.api.patch(`api/issues/${task.id}`, task);
+    return this.api.patch(`api/issues/${task.number}`, task);
   }
 
   fetchComments(id: string): Observable<IComment[]> {

@@ -2,6 +2,7 @@ import { ISelectOption } from '../core/interfaces';
 
 export interface ITask {
   id: string;
+  number: string;
   project: ISelectOption;
   summary: string;
   description: string;

@@ -74,7 +74,7 @@ export class TicketComponent {
   submit(): void {
     if (this.route.snapshot.data.readonly) {
       const task = <ITask>this.ticketForm.value;
-      task.id = this.currentTicket.id;
+      task.number = this.currentTicket.number;
 
       this.preloaderSrv.isBusy$.next(true);
       this.ticketSrv.patchTask(task).subscribe(() => {
@@ -121,7 +121,7 @@ export class TicketComponent {
         userId: '5ab8d9db-a014-41cd-a485-79d79caaa9a1'
       },
       timestamp: +new Date(),
-      issueId: this.currentTicket.id
+      issueId: this.currentTicket.number
     };
 
     this.preloaderSrv.isBusy$.next(true);
