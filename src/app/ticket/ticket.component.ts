@@ -118,7 +118,7 @@ export class TicketComponent {
       text: this.ticketForm.get('comment').value,
       user: {
         name: 'Bohdan',
-        id: '5ab8d9db-a014-41cd-a485-79d79caaa9a1'
+        userId: '5ab8d9db-a014-41cd-a485-79d79caaa9a1'
       },
       timestamp: +new Date(),
       issueId: this.currentTicket.id
