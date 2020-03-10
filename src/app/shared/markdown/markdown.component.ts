@@ -1,9 +1,7 @@
 import {
   Component,
   Input,
-  ViewEncapsulation,
-  ViewChild,
-  ElementRef
+  ViewEncapsulation
 } from '@angular/core';
 
 @Component({
@@ -14,7 +12,6 @@ import {
 })
 export class MarkdownComponent {
 
-  @ViewChild('container') public containerRef: ElementRef;
   private _text = '';
 
   @Input() set text(v: string) {
@@ -30,7 +27,7 @@ export class MarkdownComponent {
       return '';
     }
 
-    return JSON.stringify(window['marked'](this.text.replace(/\</g, '&lt;'))).replace(/\\n/g, '<br>').slice(1, -1);
+    return window['marked'](this.text.replace(/\</g, '&lt;')).replace(/\\n/g, '<br>');
   }
 
 }
