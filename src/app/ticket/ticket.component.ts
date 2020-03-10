@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators'
 
-import { ISelectOption } from '../core/interfaces';
+import { ISelectOption, IProjectOption, IAssigneeOption } from '../core/interfaces';
 import { TicketService } from './ticket.service';
 import { ITask, IComment } from './interfaces';
 import { PreloaderService } from '../core/components';
@@ -16,15 +16,15 @@ import { PreloaderService } from '../core/components';
   styleUrls: ['./ticket.component.scss']
 })
 export class TicketComponent {
-  projectOptions: ISelectOption[] = [];
+  projectOptions: IProjectOption[] = [];
   priorityOptions: ISelectOption[] = [];
   stateOptions: ISelectOption[] = [];
   typeOptions: ISelectOption[] = [];
-  assigneeOptions: ISelectOption[] = [];
+  assigneeOptions: IAssigneeOption[] = [];
   ticketForm: FormGroup;
   readonly = this.route.snapshot.data.readonly;
-  filteredProjectOptions: Observable<ISelectOption[]>;
-  filteredAssigneeOptions: Observable<ISelectOption[]>;
+  filteredProjectOptions: Observable<IProjectOption[]>;
+  filteredAssigneeOptions: Observable<IAssigneeOption[]>;
   comments: IComment[] = [];
 
   get activeRoute(): ActivatedRoute {
@@ -56,25 +56,31 @@ export class TicketComponent {
   ngOnInit() {
     this.filteredProjectOptions = this.ticketForm.controls.project.valueChanges
       .pipe(
-        map((value: ISelectOption) => value ? value.name : ''),
-        map(name => name ? this._filter(name, this.projectOptions) : this.projectOptions.slice())
+        map((value: IProjectOption) => value ? value.projectName : ''),
+        map(name => name ? this._filterProjects(name, this.projectOptions) : this.projectOptions.slice())
       );
 
     this.filteredAssigneeOptions = this.ticketForm.controls.assignee.valueChanges
       .pipe(
-        map((value: ISelectOption) => value ? value.name : ''),
-        map(name => name ? this._filter(name, this.assigneeOptions) : this.assigneeOptions.slice())
+        map((value: IAssigneeOption) => value ? value.name : ''),
+        map(name => name ? this._filterAssignee(name, this.assigneeOptions) : this.assigneeOptions.slice())
       );
   }
 
-  displayItemFn(item: ISelectOption): string {
+  displayAssigneeFn(item: IAssigneeOption): string {
     return item && item.name ? item.name : '';
+  }
+
+  displayProjectsFn(item: IProjectOption): string {
+    return item && item.projectName ? item.projectName : '';
   }
 
   submit(): void {
     if (this.route.snapshot.data.readonly) {
-      const task = <ITask>this.ticketForm.value;
-      task.number = this.currentTicket.number;
+      const task = {
+        ...this.currentTicket,
+        ...<ITask>this.ticketForm.value
+      };
 
       this.preloaderSrv.isBusy$.next(true);
       this.ticketSrv.patchTask(task).subscribe(() => {
@@ -136,7 +142,7 @@ export class TicketComponent {
     if (task) {
       this.ticketForm = new FormGroup({
         project: new FormControl({
-          value: task.project.value,
+          value: task.project,
           disabled: this.readonly
         }),
         description: new FormControl({
@@ -160,7 +166,7 @@ export class TicketComponent {
           disabled: this.readonly
         }),
         assignee: new FormControl({
-          value: task.assignee.value,
+          value: task.assignee,
           disabled: this.readonly
         }),
         comment: new FormControl('')
@@ -170,35 +176,27 @@ export class TicketComponent {
     }
 
     this.ticketForm = new FormGroup({
-      project: new FormControl({
-        value: this.projectOptions[0]
-      }),
-      description: new FormControl({
-        value: ''
-      }),
-      summary: new FormControl({
-        value: ''
-      }),
-      priorityId: new FormControl({
-        value: this.priorityOptions[0].value
-      }),
-      typeId: new FormControl({
-        value: this.typeOptions[0].value
-      }),
-      statusId: new FormControl({
-        value: this.stateOptions[0].value
-      }),
-      assignee: new FormControl({
-        value: this.assigneeOptions[0]
-      }),
+      project: new FormControl(this.projectOptions[0]),
+      description: new FormControl(''),
+      summary: new FormControl(''),
+      priorityId: new FormControl(this.priorityOptions[0].value),
+      typeId: new FormControl(this.typeOptions[0].value),
+      statusId: new FormControl(this.stateOptions[0].value),
+      assignee: new FormControl(this.assigneeOptions[0]),
       comment: new FormControl('')
     });
   }
 
-  private _filter(name: string, options: ISelectOption[]): ISelectOption[] {
+  private _filterAssignee(name: string, options: IAssigneeOption[]): IAssigneeOption[] {
     const filterValue = name.toLowerCase();
 
     return options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  private _filterProjects(name: string, options: IProjectOption[]): IProjectOption[] {
+    const filterValue = name.toLowerCase();
+
+    return options.filter(option => option.projectName.toLowerCase().indexOf(filterValue) === 0);
   }
 
 }

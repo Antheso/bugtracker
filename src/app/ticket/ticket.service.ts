@@ -5,7 +5,7 @@ import { tap, map } from 'rxjs/operators';
 
 import { ApiService } from '../core/services';
 import { ITask, IComment } from './interfaces';
-import { ISelectOption } from '../core/interfaces';
+import { ISelectOption, IProjectOption, IAssigneeOption } from '../core/interfaces';
 
 type IOptionsMap = Array<{
   from: string;
@@ -19,28 +19,18 @@ export class TicketService {
 
   public task$ = new BehaviorSubject<ITask>(void 0);
   public comments$ = new BehaviorSubject<IComment[]>([]);
-  public projectOptions$ = new BehaviorSubject<ISelectOption[]>([]);
+  public projectOptions$ = new BehaviorSubject<IProjectOption[]>([]);
   public priorityOptions$ = new BehaviorSubject<ISelectOption[]>([]);
   public statusOptions$ = new BehaviorSubject<ISelectOption[]>([]);
   public typeOptions$ = new BehaviorSubject<ISelectOption[]>([]);
-  public assigneeOptions$ = new BehaviorSubject<ISelectOption[]>([]);
+  public assigneeOptions$ = new BehaviorSubject<IAssigneeOption[]>([]);
 
   constructor(
     private api: ApiService
   ) { }
 
-  fetchProjects(): Observable<ISelectOption[]> {
+  fetchProjects(): Observable<IProjectOption[]> {
     return this.api.get('api/projects').pipe(
-      map(projects => this.mapToSelectOption(projects, [
-        {
-          from: 'projectId',
-          to: 'value'
-        },
-        {
-          from: 'projectName',
-          to: 'name'
-        }
-      ])),
       tap(projects => this.projectOptions$.next(projects))
     );
   }
@@ -93,14 +83,8 @@ export class TicketService {
     );
   }
 
-  fetchAssignees(): Observable<ISelectOption[]> {
+  fetchAssignees(): Observable<IAssigneeOption[]> {
     return this.api.get('api/users').pipe(
-      map(assignees => this.mapToSelectOption(assignees, [
-        {
-          from: 'userId',
-          to: 'value'
-        }
-      ])),
       tap(assignees => this.assigneeOptions$.next(assignees))
     );
   }

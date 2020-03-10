@@ -12,10 +12,10 @@
           [matAutocomplete]="projectAuto">
 
         <mat-autocomplete #projectAuto="matAutocomplete"
-          [displayWith]="displayItemFn">
+          [displayWith]="displayProjectsFn">
           <mat-option *ngFor="let option of filteredProjectOptions | async"
             [value]="option">
-            {{ option.name }}
+            {{ option.projectName }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
@@ -151,7 +151,7 @@
             [matAutocomplete]="assigneeAuto">
 
           <mat-autocomplete #assigneeAuto="matAutocomplete"
-            [displayWith]="displayItemFn">
+            [displayWith]="displayAssigneeFn">
             <mat-option *ngFor="let option of filteredAssigneeOptions | async"
               [value]="option">
               {{ option.name }}

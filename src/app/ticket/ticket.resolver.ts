@@ -16,7 +16,7 @@ export class TicketResolver implements Resolve<Observable<[ITask, IComment[], ..
     private ticketSrv: TicketService
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<[ITask, IComment[],  ...ISelectOption[][]]> | Observable<ISelectOption[][]> {
+  resolve(route: ActivatedRouteSnapshot): Observable<[ITask, IComment[],  ...any[][]]> | Observable<any[][]> {
     if (route.params.ticketId) {
       return forkJoin(
         this.ticketSrv.fetchTask(route.params.ticketId),
