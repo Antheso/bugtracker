@@ -44,16 +44,16 @@ export class TicketComponent {
     this.stateOptions = this.ticketSrv.statusOptions$.getValue();
     this.typeOptions = this.ticketSrv.typeOptions$.getValue();
     this.assigneeOptions = this.ticketSrv.assigneeOptions$.getValue();
-    this.initForm();
-  }
 
-  ngOnInit() {
     if (this.route.snapshot.data.readonly) {
       this.currentTicket = this.ticketSrv.task$.getValue();
       this.comments = this.ticketSrv.comments$.getValue();
-      this.ticketForm.patchValue(this.currentTicket);
     }
 
+    this.initForm(this.currentTicket);
+  }
+
+  ngOnInit() {
     this.filteredProjectOptions = this.ticketForm.controls.project.valueChanges
       .pipe(
         map((value: ISelectOption) => value ? value.name : ''),
@@ -132,35 +132,64 @@ export class TicketComponent {
     });
   }
 
-  private initForm(): void {
+  private initForm(task?: ITask): void {
+    if (task) {
+      this.ticketForm = new FormGroup({
+        project: new FormControl({
+          value: task.project.value,
+          disabled: this.readonly
+        }),
+        description: new FormControl({
+          value: task.description,
+          disabled: this.readonly
+        }),
+        summary: new FormControl({
+          value: task.summary,
+          disabled: this.readonly
+        }),
+        priorityId: new FormControl({
+          value: task.priorityId,
+          disabled: this.readonly
+        }),
+        typeId: new FormControl({
+          value: task.typeId,
+          disabled: this.readonly
+        }),
+        statusId: new FormControl({
+          value: task.statusId,
+          disabled: this.readonly
+        }),
+        assignee: new FormControl({
+          value: task.assignee.value,
+          disabled: this.readonly
+        }),
+        comment: new FormControl('')
+      });
+
+      return;
+    }
+
     this.ticketForm = new FormGroup({
       project: new FormControl({
-        value: this.projectOptions[0],
-        disabled: this.readonly
+        value: this.projectOptions[0]
       }),
       description: new FormControl({
-        value: '',
-        disabled: this.readonly
+        value: ''
       }),
       summary: new FormControl({
-        value: '',
-        disabled: this.readonly
+        value: ''
       }),
       priorityId: new FormControl({
-        value: this.priorityOptions[0].value,
-        disabled: this.readonly
+        value: this.priorityOptions[0].value
       }),
       typeId: new FormControl({
-        value: this.typeOptions[0].value,
-        disabled: this.readonly
+        value: this.typeOptions[0].value
       }),
       statusId: new FormControl({
-        value: this.stateOptions[0].value,
-        disabled: this.readonly
+        value: this.stateOptions[0].value
       }),
       assignee: new FormControl({
-        value: this.assigneeOptions[0],
-        disabled: this.readonly
+        value: this.assigneeOptions[0]
       }),
       comment: new FormControl('')
     });

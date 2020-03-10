@@ -3,8 +3,7 @@ import {
   Input,
   ViewEncapsulation,
   ViewChild,
-  ElementRef,
-  AfterViewInit
+  ElementRef
 } from '@angular/core';
 
 @Component({
@@ -13,17 +12,13 @@ import {
   styleUrls: ['./markdown.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MarkdownComponent implements AfterViewInit {
+export class MarkdownComponent {
 
   @ViewChild('container') public containerRef: ElementRef;
   private _text = '';
 
   @Input() set text(v: string) {
     this._text = v;
-
-    if (this.containerRef) {
-      this.containerRef.nativeElement.innerHTML = this.compiledText;
-    }
   };
 
   get text(): string {
@@ -36,10 +31,6 @@ export class MarkdownComponent implements AfterViewInit {
     }
 
     return JSON.stringify(window['marked'](this.text.replace(/\</g, '&lt;'))).replace(/\\n/g, '<br>').slice(1, -1);
-  }
-
-  public ngAfterViewInit(): void {
-    this.containerRef.nativeElement.innerHTML = this.compiledText;
   }
 
 }

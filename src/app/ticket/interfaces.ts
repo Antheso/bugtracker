@@ -6,10 +6,14 @@ export interface ITask {
   project: ISelectOption;
   summary: string;
   description: string;
-  priority: string;
-  type: string;
-  state: string;
+  priorityId: string;
+  typeId: string;
+  statusId: string;
   assignee: ISelectOption;
+  author: {
+    name: string;
+    userId: string;
+  };
 }
 
 export interface IComment {
