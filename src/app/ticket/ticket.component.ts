@@ -95,7 +95,7 @@ export class TicketComponent {
     event.preventDefault();
 
     if (this.route.snapshot.data.readonly) {
-      this.ticketForm.patchValue(this.currentTicket);
+      this.ticketForm.patchValue(this.ticketSrv.task$.getValue());
       Object.entries(this.ticketForm.controls).forEach(([key, value]) => {
         if (key !== 'comment') {
           value.disable();

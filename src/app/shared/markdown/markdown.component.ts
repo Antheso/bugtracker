@@ -27,7 +27,7 @@ export class MarkdownComponent {
       return '';
     }
 
-    return window['marked'](this.text.replace(/\</g, '&lt;')).replace(/\\n/g, '<br>');
+    return window['marked'](this.text.replace(/\</g, '&lt;')).replace(/\n/g, '<br>');
   }
 
 }
