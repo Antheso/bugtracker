@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators'
+import { MatSelect } from '@angular/material/select';
+
+import { Observable, Subject, ReplaySubject } from 'rxjs';
+import { map, tap, take, takeUntil } from 'rxjs/operators'
 
 import { ISelectOption, IProjectOption, IAssigneeOption } from '../core/interfaces';
 import { TicketService } from './ticket.service';
@@ -15,7 +17,7 @@ import { PreloaderService } from '../core/components';
   templateUrl: './ticket.component.html',
   styleUrls: ['./ticket.component.scss']
 })
-export class TicketComponent {
+export class TicketComponent implements AfterViewInit, OnDestroy {
   projectOptions: IProjectOption[] = [];
   priorityOptions: ISelectOption[] = [];
   stateOptions: ISelectOption[] = [];
@@ -23,15 +25,58 @@ export class TicketComponent {
   assigneeOptions: IAssigneeOption[] = [];
   ticketForm: FormGroup;
   readonly = this.route.snapshot.data.readonly;
-  filteredProjectOptions: Observable<IProjectOption[]>;
-  filteredAssigneeOptions: Observable<IAssigneeOption[]>;
+  filteredProjectOptions: ReplaySubject<IProjectOption[]> = new ReplaySubject(1);
+  filteredAssigneeOptions: ReplaySubject<IAssigneeOption[]> = new ReplaySubject(1);
   comments: IComment[] = [];
+  @ViewChild('assigneeSelect') assigneeSelect: MatSelect;
+  @ViewChild('projectSelect') projectSelect: MatSelect;
 
   get activeRoute(): ActivatedRoute {
     return this.route;
   }
 
+  get descriptionControl(): AbstractControl {
+    return this.ticketForm.get('description');
+  }
+
+  get summaryControl(): AbstractControl {
+    return this.ticketForm.get('summary');
+  }
+
+  get priorityIdControl(): AbstractControl {
+    return this.ticketForm.get('priorityId');
+  }
+
+  get typeIdControl(): AbstractControl {
+    return this.ticketForm.get('typeId');
+  }
+
+  get statusIdControl(): AbstractControl {
+    return this.ticketForm.get('statusId');
+  }
+
+  get assigneeControl(): AbstractControl {
+    return this.ticketForm.get('assignee');
+  }
+
+  get assigneeFilterControl(): AbstractControl {
+    return this.ticketForm.get('assigneeFilter');
+  }
+
+  get projectControl(): AbstractControl {
+    return this.ticketForm.get('project');
+  }
+
+  get projectFilterControl(): AbstractControl {
+    return this.ticketForm.get('projectFilter');
+  }
+
+  get commentControl(): AbstractControl {
+    return this.ticketForm.get('comment');
+  }
+
   private currentTicket: ITask;
+  private _onDestroy = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -54,21 +99,28 @@ export class TicketComponent {
   }
 
   ngOnInit() {
-    this.filteredProjectOptions = this.ticketForm.controls.project.valueChanges
-      .pipe(
-        map((value: IProjectOption) => value ? value.projectName : ''),
-        map(name => name ? this._filterProjects(name, this.projectOptions) : this.projectOptions.slice())
-      );
+    this.filteredAssigneeOptions.next(this.assigneeOptions.slice());
+    this.filteredProjectOptions.next(this.projectOptions.slice());
 
-    this.filteredAssigneeOptions = this.ticketForm.controls.assignee.valueChanges
-      .pipe(
-        map((value: IAssigneeOption) => value ? value.name : ''),
-        map(name => name ? this._filterAssignee(name, this.assigneeOptions) : this.assigneeOptions.slice())
-      );
+    this.assigneeFilterControl.valueChanges.pipe(
+      takeUntil(this._onDestroy)
+    ).subscribe(() => {
+      this.filterAssignee();
+    });
+    this.projectFilterControl.valueChanges.pipe(
+      takeUntil(this._onDestroy)
+    ).subscribe(() => {
+      this.filterProjects();
+    });
   }
 
-  displayAssigneeFn(item: IAssigneeOption): string {
-    return item && item.name ? item.name : '';
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+  ngAfterViewInit(): void {
+    this.initSearchSelect();
   }
 
   displayProjectsFn(item: IProjectOption): string {
@@ -76,6 +128,12 @@ export class TicketComponent {
   }
 
   submit(): void {
+    this.ticketForm.markAllAsTouched();
+
+    if (this.ticketForm.invalid && (this.ticketForm.dirty || this.ticketForm.touched)) {
+      return;
+    }
+
     if (this.route.snapshot.data.readonly) {
       const task = {
         ...this.currentTicket,
@@ -144,7 +202,9 @@ export class TicketComponent {
         project: new FormControl({
           value: task.project,
           disabled: this.readonly
-        }),
+        },
+        [Validators.required]),
+        projectFilter: new FormControl(),
         description: new FormControl({
           value: task.description,
           disabled: this.readonly
@@ -152,23 +212,29 @@ export class TicketComponent {
         summary: new FormControl({
           value: task.summary,
           disabled: this.readonly
-        }),
+        },
+        [Validators.required, Validators.maxLength(120)]),
         priorityId: new FormControl({
           value: task.priorityId,
           disabled: this.readonly
-        }),
+        },
+        [Validators.required]),
         typeId: new FormControl({
           value: task.typeId,
           disabled: this.readonly
-        }),
+        },
+        [Validators.required]),
         statusId: new FormControl({
           value: task.statusId,
           disabled: this.readonly
-        }),
+        },
+        [Validators.required]),
         assignee: new FormControl({
           value: task.assignee,
           disabled: this.readonly
-        }),
+        },
+        [Validators.required]),
+        assigneeFilter: new FormControl(),
         comment: new FormControl('')
       });
 
@@ -176,27 +242,67 @@ export class TicketComponent {
     }
 
     this.ticketForm = new FormGroup({
-      project: new FormControl(this.projectOptions[0]),
+      project: new FormControl(this.projectOptions[0], [Validators.required]),
+      projectFilter: new FormControl(),
       description: new FormControl(''),
-      summary: new FormControl(''),
-      priorityId: new FormControl(this.priorityOptions[0].value),
-      typeId: new FormControl(this.typeOptions[0].value),
-      statusId: new FormControl(this.stateOptions[0].value),
-      assignee: new FormControl(this.assigneeOptions[0]),
+      summary: new FormControl('', [Validators.required, Validators.maxLength(120)]),
+      priorityId: new FormControl(this.priorityOptions[0].value, [Validators.required]),
+      typeId: new FormControl(this.typeOptions[0].value, [Validators.required]),
+      statusId: new FormControl(this.stateOptions[0].value, [Validators.required]),
+      assignee: new FormControl(this.assigneeOptions[0], [Validators.required]),
+      assigneeFilter: new FormControl(),
       comment: new FormControl('')
     });
   }
 
-  private _filterAssignee(name: string, options: IAssigneeOption[]): IAssigneeOption[] {
-    const filterValue = name.toLowerCase();
+  private initSearchSelect(): void {
+    this.filteredAssigneeOptions.pipe(
+        take(1),
+        takeUntil(this._onDestroy)
+      ).subscribe(() => this.assigneeSelect.compareWith = (a: IAssigneeOption, b: IAssigneeOption) => a && b && a.userId === b.userId);
 
-    return options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+    this.filteredProjectOptions.pipe(
+      take(1),
+      takeUntil(this._onDestroy)
+    ).subscribe(() => this.projectSelect.compareWith = (a: IProjectOption, b: IProjectOption) => a && b && a.projectId === b.projectId);
   }
 
-  private _filterProjects(name: string, options: IProjectOption[]): IProjectOption[] {
-    const filterValue = name.toLowerCase();
+  private filterAssignee(): void {
+    if (!this.assigneeOptions) {
+      return;
+    }
 
-    return options.filter(option => option.projectName.toLowerCase().indexOf(filterValue) === 0);
+    let search = this.assigneeFilterControl.value;
+
+    if (!search) {
+      this.filteredAssigneeOptions.next(this.assigneeOptions.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredAssigneeOptions.next(
+      this.assigneeOptions.filter(assignee => assignee.name.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  private filterProjects(): IProjectOption[] {
+    if (!this.projectOptions) {
+      return;
+    }
+
+    let search = this.projectFilterControl.value;
+
+    if (!search) {
+      this.filteredProjectOptions.next(this.projectOptions.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredProjectOptions.next(
+      this.projectOptions.filter(assignee => assignee.projectName.toLowerCase().indexOf(search) > -1)
+    );
   }
 
 }

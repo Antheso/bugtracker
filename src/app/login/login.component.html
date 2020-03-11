@@ -14,6 +14,9 @@
         matInput
         placeholder="Login"
         formControlName="login">
+        <mat-error *ngIf="loginControl.invalid && (loginControl.dirty || loginControl.touched) && loginControl.errors.required">
+          Login is <strong>required</strong>
+        </mat-error>
     </mat-form-field>
 
     <mat-form-field class="login__field">
@@ -25,8 +28,11 @@
         placeholder="Login"
         type="password"
         formControlName="password">
+      <mat-error *ngIf="passwordControl.invalid && (passwordControl.dirty || passwordControl.touched) && passwordControl.errors.required">
+        Password is <strong>required</strong>
+      </mat-error>
     </mat-form-field>
 
-    <button mat-raised-button>Login</button>
+    <button mat-raised-button [disabled]="loginForm.invalid && (loginForm.dirty || loginForm.touched)">Login</button>
   </form>
 </div>

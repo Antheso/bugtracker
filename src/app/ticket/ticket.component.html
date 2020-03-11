@@ -5,19 +5,23 @@
       <mat-form-field>
         <mat-label>Project name</mat-label>
 
-        <input class="ticket__input"
-          type="text"
-          matInput
-          formControlName="project"
-          [matAutocomplete]="projectAuto">
+        <mat-select formControlName="project" #projectSelect>
+          <mat-option>
+            <ngx-mat-select-search formControlName="projectFilter"
+              placeholderLabel="Find project"
+              noEntriesFoundLabel="No projects found">
+            </ngx-mat-select-search>
+          </mat-option>
 
-        <mat-autocomplete #projectAuto="matAutocomplete"
-          [displayWith]="displayProjectsFn">
           <mat-option *ngFor="let option of filteredProjectOptions | async"
             [value]="option">
             {{ option.projectName }}
           </mat-option>
-        </mat-autocomplete>
+        </mat-select>
+
+        <mat-error *ngIf="projectControl.invalid && (projectControl.dirty || projectControl.touched) && projectControl.errors.required">
+          Project is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>
@@ -27,6 +31,12 @@
         <input matInput
           placeholder="Summary"
           formControlName="summary">
+        <mat-error *ngIf="summaryControl.invalid && (summaryControl.dirty || summaryControl.touched) && summaryControl.errors.required">
+          Summary is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="summaryControl.invalid && (summaryControl.dirty || summaryControl.touched) && summaryControl.errors.maxLength">
+          Length should be less than 120
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field *ngIf="!readonly">
@@ -39,9 +49,10 @@
       </mat-form-field>
 
       <div class="ticket__preview"
+        *ngIf="descriptionControl.value"
         [class.ticket__preview_disabled]="readonly">
         <mat-label class="ticket__label">Description</mat-label>
-        <bg-markdown [text]="ticketForm.get('description').value"></bg-markdown>
+        <bg-markdown [text]="descriptionControl.value"></bg-markdown>
       </div>
 
       <div class="ticket__controls">
@@ -49,7 +60,8 @@
           <button class="ticket__button"
             color="primary"
             mat-raised-button
-            (click)="submit()">
+            (click)="submit()"
+            [disabled]="ticketForm.invalid && (ticketForm.dirty || ticketForm.touched)">
             Save
           </button>
           <button class="ticket__button"
@@ -90,14 +102,14 @@
 
         <button class="ticket__button"
           color="primary"
-          [disabled]="!ticketForm.get('comment').value"
+          [disabled]="!commentControl.value"
           (click)="addComment()"
           mat-raised-button>
           Add comment
         </button>
 
         <div class="comment__preview">
-          <bg-markdown [text]="ticketForm.get('comment').value"></bg-markdown>
+          <bg-markdown [text]="commentControl.value"></bg-markdown>
         </div>
       </div>
     </div>
@@ -106,57 +118,70 @@
       <div class="row">
         <span class="row__name">Priority</span>
         <mat-form-field class="row__select">
-          <select matNativeControl required formControlName="priorityId">
-            <option *ngFor="let option of priorityOptions"
+          <mat-select formControlName="priorityId">
+            <mat-option *ngFor="let option of priorityOptions"
               [value]="option.value">
               {{ option.name }}
-            </option>
-          </select>
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="priorityIdControl.invalid && (priorityIdControl.dirty || priorityIdControl.touched) && priorityIdControl.errors.required">
+            Priority is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </div>
 
       <div class="row">
         <span class="row__name">Type</span>
         <mat-form-field class="row__select">
-          <select matNativeControl required formControlName="typeId">
-            <option *ngFor="let option of typeOptions"
+          <mat-select formControlName="typeId">
+            <mat-option *ngFor="let option of typeOptions"
               [value]="option.value">
               {{ option.name }}
-            </option>
-          </select>
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="typeIdControl.invalid && (typeIdControl.dirty || typeIdControl.touched) && typeIdControl.errors.required">
+            Type is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </div>
 
       <div class="row">
         <span class="row__name">State</span>
         <mat-form-field class="row__select">
-          <select matNativeControl required formControlName="statusId">
-            <option *ngFor="let option of stateOptions"
+          <mat-select formControlName="statusId">
+            <mat-option *ngFor="let option of stateOptions"
               [value]="option.value">
               {{ option.name }}
-            </option>
-          </select>
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="statusIdControl.invalid && (statusIdControl.dirty || statusIdControl.touched) && statusIdControl.errors.required">
+            State is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </div>
 
       <div class="row">
         <span class="row__name">Assignee</span>
-        <mat-form-field>
+        <mat-form-field class="row__select">
           <mat-label>Assignee name</mat-label>
 
-          <input class="ticket__input"
-            type="text"
-            matInput
-            formControlName="assignee"
-            [matAutocomplete]="assigneeAuto">
+          <mat-select formControlName="assignee" #assigneeSelect>
+            <mat-option>
+              <ngx-mat-select-search formControlName="assigneeFilter"
+                placeholderLabel="Find assignee"
+                noEntriesFoundLabel="No assignees found">
+              </ngx-mat-select-search>
+            </mat-option>
 
-          <mat-autocomplete #assigneeAuto="matAutocomplete"
-            [displayWith]="displayAssigneeFn">
             <mat-option *ngFor="let option of filteredAssigneeOptions | async"
               [value]="option">
               {{ option.name }}
             </mat-option>
-          </mat-autocomplete>
+          </mat-select>
+
+          <mat-error *ngIf="assigneeControl.invalid && (assigneeControl.dirty || assigneeControl.touched) && assigneeControl.errors.required">
+            Assignee is <strong>required</strong>
+          </mat-error>
         </mat-form-field>
       </div>
     </div>

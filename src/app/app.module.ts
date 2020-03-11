@@ -9,7 +9,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatTableModule } from '@angular/material/table';;
+import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -55,7 +58,9 @@ import { SharedModule } from './shared/shared.module';
       MatCheckboxModule,
       MatIconModule,
       HttpClientModule,
-      SharedModule
+      SharedModule,
+      MatSelectModule,
+      NgxMatSelectSearchModule
    ],
    providers: [],
    bootstrap: [

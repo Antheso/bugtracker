@@ -6,7 +6,7 @@ export enum Themes {
 };
 export const THEMES = {
   [Themes.brown]: {
-    backgroundColor: '#1C0400',
+    backgroundColor: '#0e0e0e',
     color: '#FFF0E3',
     stylesHref: './assets/styles/pink-bluegrey.css'
   },
