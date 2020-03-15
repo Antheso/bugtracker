@@ -84,7 +84,7 @@
       <div class="ticket__comments" *ngIf="activeRoute.snapshot.data.readonly">
         <div class="comment" *ngFor="let comment of comments">
           <div class="comment__info">
-            <span class="comment__username">{{ comment.user?.name }}</span>
+            <span class="comment__username">{{ comment.user?.firstName }}</span>
             <span class="comment__time"> commented {{ comment.timestamp | date:'medium'}}</span>
           </div>
           <bg-markdown [text]="comment.text"></bg-markdown>
@@ -175,7 +175,7 @@
 
             <mat-option *ngFor="let option of filteredAssigneeOptions | async"
               [value]="option">
-              {{ option.name }}
+              {{ option.firstName }}
             </mat-option>
           </mat-select>
 

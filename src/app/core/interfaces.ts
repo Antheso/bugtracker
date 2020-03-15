@@ -10,5 +10,5 @@ export interface IProjectOption {
 
 export interface IAssigneeOption {
   userId: string;
-  name: string;
+  firstName: string;
 }

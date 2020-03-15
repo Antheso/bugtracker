@@ -282,7 +282,7 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
     }
 
     this.filteredAssigneeOptions.next(
-      this.assigneeOptions.filter(assignee => assignee.name.toLowerCase().indexOf(search) > -1)
+      this.assigneeOptions.filter(assignee => assignee.firstName.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -301,7 +301,7 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
     }
 
     this.filteredProjectOptions.next(
-      this.projectOptions.filter(assignee => assignee.projectName.toLowerCase().indexOf(search) > -1)
+      this.projectOptions.filter(project => project.projectName.toLowerCase().indexOf(search) > -1)
     );
   }
 
