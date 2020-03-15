@@ -4,12 +4,18 @@
     [formGroup]="registrationForm">
     <mat-form-field class="registration__field">
       <mat-label class="registration__label">
-        Login
+        Email
       </mat-label>
       <input class="registration__input"
         matInput
         placeholder="Login"
-        formControlName="login">
+        formControlName="email">
+      <mat-error *ngIf="emailControl.invalid && (emailControl.dirty || emailControl.touched) && emailControl.errors.required">
+        Email is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="emailControl.invalid && (emailControl.dirty || emailControl.touched) && emailControl.errors.email">
+        Email <strong>is not valid</strong>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="registration__field">
@@ -21,6 +27,12 @@
         placeholder="Password"
         type="password"
         formControlName="password">
+      <mat-error *ngIf="passwordControl.invalid && (passwordControl.dirty || passwordControl.touched) && passwordControl.errors.required">
+        Password is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="passwordControl.invalid && (passwordControl.dirty || passwordControl.touched) && passwordControl.errors.isMatching">
+        Passwords <strong>doesn't match</strong>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="registration__field">
@@ -32,6 +44,12 @@
         placeholder="Password"
         type="password"
         formControlName="passwordRepeat">
+      <mat-error *ngIf="passwordRepeatControl.invalid && (passwordRepeatControl.dirty || passwordRepeatControl.touched) && passwordRepeatControl.errors.required && !passwordRepeatControl.errors.isMatching">
+        Repeat password is <strong>required</strong>
+      </mat-error>
+      <mat-error *ngIf="passwordRepeatControl.invalid && (passwordRepeatControl.dirty || passwordRepeatControl.touched) && passwordRepeatControl.errors.isMatching">
+        Passwords <strong>doesn't match</strong>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="registration__field">
@@ -42,6 +60,9 @@
         matInput
         placeholder="First name"
         formControlName="firstName">
+      <mat-error *ngIf="firstNameControl.invalid && (firstNameControl.dirty || firstNameControl.touched) && firstNameControl.errors.required">
+        First name is <strong>required</strong>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="registration__field">
@@ -52,8 +73,14 @@
         matInput
         placeholder="Last name"
         formControlName="lastName">
+      <mat-error *ngIf="lastNameControl.invalid && (lastNameControl.dirty || lastNameControl.touched) && lastNameControl.errors.required">
+        Last name is <strong>required</strong>
+      </mat-error>
     </mat-form-field>
 
-    <button mat-raised-button>Register</button>
+    <button mat-raised-button
+      [disabled]="registrationForm.invalid && (registrationForm.dirty || registrationForm.touched)">
+      Register
+    </button>
   </form>
 </div>

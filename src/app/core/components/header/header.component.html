@@ -7,8 +7,15 @@
   <bg-theme-picker></bg-theme-picker>
 
   <nav class="header__nav">
-    <a class="link" routerLink="/create-ticket">Create ticket</a>
-    <a class="link" routerLink="/issues">Issues</a>
-    <a class="link" routerLink="/login">Log In</a>
+    <ng-container *ngIf="userLoggedIn; else signInBlock">
+      <a class="link" routerLink="/create-ticket">Create ticket</a>
+      <a class="link" routerLink="/issues">Issues</a>
+      <a class="link" (click)="logout($event)">Logout</a>
+    </ng-container>
+
+    <ng-template #signInBlock>
+      <a class="link" routerLink="/registration">Sign Up</a>
+      <a class="link" routerLink="/login">Sign In</a>
+    </ng-template>
   </nav>
 </div>

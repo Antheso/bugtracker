@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { MatSelect } from '@angular/material/select';
 
-import { Observable, Subject, ReplaySubject } from 'rxjs';
-import { map, tap, take, takeUntil } from 'rxjs/operators'
+import { Subject, ReplaySubject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators'
 
 import { ISelectOption, IProjectOption, IAssigneeOption } from '../core/interfaces';
 import { TicketService } from './ticket.service';

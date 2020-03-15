@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -8,35 +8,72 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { Subscription } from 'rxjs';
+
+import { RegistrationService } from './registration.service';
+
 @Component({
   selector: 'bg-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss']
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements AfterViewInit, OnDestroy {
 
   registrationForm = new FormGroup({
-    login: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
     passwordRepeat: new FormControl('', [Validators.required, this.matchValues('password')]),
-    firstName: new FormControl(''),
-    lastName: new FormControl('')
+    firstName: new FormControl('', [Validators.required]),
+    lastName: new FormControl('', [Validators.required])
   });
 
-  constructor(
-    private router: Router
-  ) { }
+  private subs = new Subscription();
 
-  register(): void {
-    console.log(this.registrationForm.value);
-    this.router.navigateByUrl('/');
+  get emailControl(): AbstractControl {
+    return this.registrationForm.get('email');
   }
 
-  checkPasswords(group: FormGroup) {
-    let pass = group.get('password').value;
-    let confirmPass = group.get('passwordRepeat').value;
+  get passwordControl(): AbstractControl {
+    return this.registrationForm.get('password');
+  }
 
-    return pass === confirmPass ? null : { notSame: true };
+  get passwordRepeatControl(): AbstractControl {
+    return this.registrationForm.get('passwordRepeat');
+  }
+
+  get firstNameControl(): AbstractControl {
+    return this.registrationForm.get('firstName');
+  }
+
+  get lastNameControl(): AbstractControl {
+    return this.registrationForm.get('firstName');
+  }
+
+  constructor(
+    private router: Router,
+    private registerSrv: RegistrationService
+  ) { }
+
+  ngAfterViewInit(): void {
+    this.subs.add(
+      this.passwordControl.valueChanges.subscribe(
+        () => this.passwordRepeatControl.updateValueAndValidity()
+      )
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
+  register(): void {
+    this.registrationForm.markAllAsTouched();
+
+    if (this.registrationForm.invalid && (this.registrationForm.dirty || this.registrationForm.touched)) {
+      return;
+    }
+
+    this.registerSrv.register(this.registrationForm.value).subscribe(() => this.router.navigateByUrl('/'));
   }
 
   matchValues(matchTo: string): (AbstractControl) => ValidationErrors | null {
@@ -44,8 +81,8 @@ export class RegistrationComponent {
       return !!control.parent && !!control.parent.value &&
         control.value === control.parent.controls[matchTo].value
           ? null
-          : { isMatching: false };
-  };
-}
+          : { isMatching: true };
+    };
+  }
 
 }

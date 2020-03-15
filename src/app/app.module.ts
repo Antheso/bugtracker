@@ -13,6 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -62,7 +63,9 @@ import { SharedModule } from './shared/shared.module';
       MatSelectModule,
       NgxMatSelectSearchModule
    ],
-   providers: [],
+   providers: [
+      CookieService
+   ],
    bootstrap: [
       AppComponent
    ]
