@@ -1,13 +1,14 @@
 <div class="issues">
   <div class="issues__search">
     <mat-form-field [formGroup]="searchForm" class="issues__field">
-      <input matInput type="text" formControlName="search" placeholder="Search">
+      <input matInput type="text" formControlName="search" placeholder="Search" (keydown.enter)="searchTasks()">
       <button mat-button *ngIf="searchForm.value.search" matSuffix mat-icon-button aria-label="Clear"
         (click)="resetFilter()">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>
-    <button mat-icon-button aria-label="Search" (click)="searchTasks()">
+    <button mat-icon-button aria-label="Search"
+      (click)="searchTasks()">
       <mat-icon>search</mat-icon>
     </button>
   </div>
@@ -63,4 +64,10 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
     </tr>
   </table>
+  <button class="issues__button"
+    color="primary"
+    mat-raised-button
+    (click)="loadMore()">
+    Load more
+  </button>
 </div>

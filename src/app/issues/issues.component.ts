@@ -61,11 +61,15 @@ export class IssuesComponent {
   }
 
   searchTasks(): void {
-    this.dataSource.filter = this.searchForm.value.search || '';
-    this.dataSource._filterData(this.issuesSrv.issuesList$.getValue())
+    this.preloaderSrv.isBusy$.next(true);
+    this.issuesSrv.fetchIssues(false, this.searchForm.value.search).subscribe(() => {
+      this.dataSource.data = this.issuesSrv.issuesList$.getValue();
+      this.preloaderSrv.isBusy$.next(false);
+    });
   }
 
   resetFilter(): void {
+    this.issuesSrv.issuesList$.next([]);
     this.searchForm.reset();
     this.searchTasks();
   }
@@ -89,6 +93,15 @@ export class IssuesComponent {
     ).subscribe(() => {
       this.preloaderSrv.isBusy$.next(false);
       this.refreshDataSource();
+    });
+  }
+
+  loadMore(): void {
+    this.preloaderSrv.isBusy$.next(true);
+
+    this.issuesSrv.fetchIssues(true).subscribe(() => {
+      this.dataSource.data = this.issuesSrv.issuesList$.getValue();
+      this.preloaderSrv.isBusy$.next(false);
     });
   }
 
