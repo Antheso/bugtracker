@@ -55,31 +55,33 @@
         <bg-markdown [text]="descriptionControl.value"></bg-markdown>
       </div>
 
-      <div class="ticket__controls" *bgPermission="1">
-        <ng-container *ngIf="!readonly; else editBlock">
-          <button class="ticket__button"
-            color="primary"
-            mat-raised-button
-            (click)="submit()"
-            [disabled]="ticketForm.invalid && (ticketForm.dirty || ticketForm.touched)">
-            Save
-          </button>
-          <button class="ticket__button"
-            mat-raised-button
-            (click)="cancel($event)">
-            Cancel
-          </button>
-        </ng-container>
-
-        <ng-template #editBlock>
-          <button class="ticket__button"
-            color="primary"
-            mat-raised-button
-            (click)="edit()">
-            Edit
-          </button>
-        </ng-template>
-      </div>
+      <ng-container *ngIf="isAuthorOrAdmin || isAssignee">
+        <div class="ticket__controls" *bgPermission="1">
+          <ng-container *ngIf="!readonly; else editBlock">
+            <button class="ticket__button"
+              color="primary"
+              mat-raised-button
+              (click)="submit()"
+              [disabled]="ticketForm.invalid && (ticketForm.dirty || ticketForm.touched)">
+              Save
+            </button>
+            <button class="ticket__button"
+              mat-raised-button
+              (click)="cancel($event)">
+              Cancel
+            </button>
+          </ng-container>
+  
+          <ng-template #editBlock>
+            <button class="ticket__button"
+              color="primary"
+              mat-raised-button
+              (click)="edit()">
+              Edit
+            </button>
+          </ng-template>
+        </div>
+      </ng-container>
 
       <div class="ticket__comments" *ngIf="activeRoute.snapshot.data.readonly">
         <div class="comment" *ngFor="let comment of comments">
@@ -100,7 +102,7 @@
                 placeholder="Write a comment"></textarea>
             </mat-form-field>
           </div>
-  
+
           <button class="ticket__button"
             color="primary"
             [disabled]="!commentControl.value"
@@ -108,7 +110,7 @@
             mat-raised-button>
             Add comment
           </button>
-  
+
           <div class="comment__preview">
             <bg-markdown [text]="commentControl.value"></bg-markdown>
           </div>

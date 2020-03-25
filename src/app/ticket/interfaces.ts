@@ -1,16 +1,16 @@
-import { ISelectOption } from '../core/interfaces';
+import { IAssigneeOption, IProjectOption } from '../core/interfaces';
 import { IUser } from '../core/services';
 
 export interface ITask {
   id: string;
   number: string;
-  project: ISelectOption;
+  project: IProjectOption;
   summary: string;
   description: string;
   priorityId: string;
   typeId: string;
   statusId: string;
-  assignee: ISelectOption;
+  assignee: IAssigneeOption;
   author: {
     name: string;
     userId: string;

@@ -11,7 +11,7 @@ import { ISelectOption, IProjectOption, IAssigneeOption } from '../core/interfac
 import { TicketService } from './ticket.service';
 import { ITask, IComment } from './interfaces';
 import { PreloaderService } from '../core/components';
-import { UserService } from '../core/services';
+import { UserService, Roles } from '../core/services';
 
 @Component({
   selector: 'bg-ticket',
@@ -74,6 +74,14 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
 
   get commentControl(): AbstractControl {
     return this.ticketForm.get('comment');
+  }
+
+  get isAuthorOrAdmin(): boolean {
+    return !this.currentTicket || this.currentTicket.author.userId === this.userSrv.user.userId || this.userSrv.user.roleId === Roles.Admin;
+  }
+
+  get isAssignee(): boolean {
+    return this.currentTicket.assignee.userId === this.userSrv.user.userId;
   }
 
   private currentTicket: ITask;
@@ -176,7 +184,15 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
   edit(): void {
     this.readonly = false;
 
-    this.ticketForm.enable();
+    if (this.isAuthorOrAdmin) {
+      this.ticketForm.enable();
+
+      return;
+    }
+
+    if (this.isAssignee) {
+      this.statusIdControl.enable();
+    }
   }
 
   addComment(): void {
