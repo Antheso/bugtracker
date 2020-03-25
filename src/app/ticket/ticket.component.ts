@@ -151,7 +151,7 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
     this.preloaderSrv.isBusy$.next(true);
     this.ticketSrv.createTask(<ITask>this.ticketForm.value).subscribe(() => {
       this.preloaderSrv.isBusy$.next(false);
-      this.initForm();
+      this.router.navigateByUrl('/');
     })
   }
 

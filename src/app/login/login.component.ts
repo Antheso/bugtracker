@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { ApiService } from '../core/services';
 import { PreloaderService } from '../core/components';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'bg-login',
@@ -16,6 +17,7 @@ export class LoginComponent {
     login: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
   });
+  error = '';
 
   get loginControl(): AbstractControl {
     return this.loginForm.get('login');
@@ -33,16 +35,23 @@ export class LoginComponent {
 
   login(): void {
     this.loginForm.markAllAsTouched();
+    this.error = '';
 
     if (this.loginForm.invalid && (this.loginForm.dirty || this.loginForm.touched)) {
       return;
     }
 
     this.preloaderSrv.isBusy$.next(true);
-    this.api.post('api/login', this.loginForm.value).subscribe(() => {
+    this.api.post('api/login', this.loginForm.value, (err) => {
+      this.error = err.error;
+      this.passwordControl.reset();
+      return of(void 0);
+    }).subscribe((resp) => {
       this.preloaderSrv.isBusy$.next(false);
 
-      this.router.navigateByUrl('/');
+      if (resp) {
+        this.router.navigateByUrl('/');
+      }
     });
   }
 
