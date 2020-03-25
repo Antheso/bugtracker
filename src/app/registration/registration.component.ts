@@ -24,7 +24,8 @@ export class RegistrationComponent implements AfterViewInit, OnDestroy {
     password: new FormControl('', [Validators.required]),
     passwordRepeat: new FormControl('', [Validators.required, this.matchValues('password')]),
     firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required])
+    lastName: new FormControl('', [Validators.required]),
+    terms: new FormControl(true, [Validators.requiredTrue])
   });
 
   private subs = new Subscription();
@@ -46,7 +47,11 @@ export class RegistrationComponent implements AfterViewInit, OnDestroy {
   }
 
   get lastNameControl(): AbstractControl {
-    return this.registrationForm.get('firstName');
+    return this.registrationForm.get('lastName');
+  }
+
+  get termsControl(): AbstractControl {
+    return this.registrationForm.get('terms');
   }
 
   constructor(

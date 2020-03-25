@@ -7,6 +7,7 @@ import { IssuesComponent, IssuesResolver } from './issues';
 import { RegistrationComponent } from './registration';
 import { Page404Component } from './page404';
 import { Page403Component } from './page403';
+import { UserGuard } from './core/guards';
 
 const routes: Routes = [
   {
@@ -16,38 +17,45 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate: [UserGuard]
   },
   {
     path: 'registration',
-    component: RegistrationComponent
+    component: RegistrationComponent,
+    canActivate: [UserGuard]
   },
   {
     path: 'issues',
     component: IssuesComponent,
-    resolve: [ IssuesResolver ]
+    resolve: [ IssuesResolver ],
+    canActivate: [UserGuard]
   },
   {
     path: 'create-ticket',
     component: TicketComponent,
-    resolve: [ TicketResolver ]
+    resolve: [ TicketResolver ],
+    canActivate: [UserGuard]
   },
   {
     path: 'watch-ticket/:ticketId',
     component: TicketComponent,
     resolve: [ TicketResolver ],
+    canActivate: [UserGuard],
     data: {
       readonly: true
     }
   },
   {
     path: 'page-403',
-    component: Page403Component
+    component: Page403Component,
+    canActivate: [UserGuard]
   },
   {
     path: '**',
     pathMatch: 'full',
-    component: Page404Component
+    component: Page404Component,
+    canActivate: [UserGuard]
   }
 ];
 

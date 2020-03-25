@@ -13,7 +13,7 @@ import { PreloaderService } from '../core/components';
 export class LoginComponent {
 
   loginForm = new FormGroup({
-    login: new FormControl('', [Validators.required]),
+    login: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
   });
 

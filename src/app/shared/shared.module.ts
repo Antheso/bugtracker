@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MarkdownComponent } from './markdown';
 import { SanitizerPipe } from './pipes';
+import { PermissionDirective } from './directives';
 
 @NgModule({
   imports: [
@@ -10,11 +11,13 @@ import { SanitizerPipe } from './pipes';
   ],
   declarations: [
     MarkdownComponent,
-    SanitizerPipe
+    SanitizerPipe,
+    PermissionDirective
   ],
   exports: [
     MarkdownComponent,
-    SanitizerPipe
+    SanitizerPipe,
+    PermissionDirective
   ]
 })
 export class SharedModule { }

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { CookieService } from 'ngx-cookie-service';
 
-import { ApiService } from '../../services';
+import { ApiService, UserService } from '../../services';
 
 const TOKEN_KEY = 'jwt';
 
@@ -18,19 +18,28 @@ export class HeaderComponent {
     return this.cookieSrv.check(TOKEN_KEY);
   }
 
+  get username(): string {
+    return this.userSrv.user && this.userSrv.user.firstName;
+  }
+
   constructor(
     private cookieSrv: CookieService,
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private userSrv: UserService
   ) {}
 
   logout(event: MouseEvent): void {
     event.preventDefault();
 
     this.api.post('api/logout', null).subscribe(() => {
-      this.cookieSrv.delete(TOKEN_KEY);
       this.router.navigateByUrl('/login');
     });
+  }
+
+  removeCookie(event: MouseEvent) {
+    event.preventDefault();
+    this.cookieSrv.delete(TOKEN_KEY);
   }
 
 }

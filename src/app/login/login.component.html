@@ -8,14 +8,17 @@
     </p>
     <mat-form-field class="login__field">
       <mat-label class="login__label">
-        Login
+        Email
       </mat-label>
       <input class="login__input"
         matInput
-        placeholder="Login"
+        placeholder="Email"
         formControlName="login">
         <mat-error *ngIf="loginControl.invalid && (loginControl.dirty || loginControl.touched) && loginControl.errors.required">
-          Login is <strong>required</strong>
+          Email is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="loginControl.invalid && (loginControl.dirty || loginControl.touched) && loginControl.errors.email">
+          Email <strong>is not valid</strong>
         </mat-error>
     </mat-form-field>
 

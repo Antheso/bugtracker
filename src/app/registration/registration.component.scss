@@ -27,4 +27,23 @@
       margin-bottom: 0;
     }
   }
+
+  &__terms {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__checkbox {
+    margin-right: 4px;
+  }
+
+  &__error {
+    font-size: 75%;
+    text-align: center;
+  }
+
+  &__button {
+    margin-top: 20px;
+  }
 }

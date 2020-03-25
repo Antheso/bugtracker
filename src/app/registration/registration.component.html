@@ -78,7 +78,20 @@
       </mat-error>
     </mat-form-field>
 
+    <div class="registration__field">
+      <div class="registration__terms">
+        <mat-checkbox class="registration__checkbox" formControlName="terms">
+          Accept
+        </mat-checkbox>
+        <a href="/assets/pdf/polzovatelskoe-soglashenie-shablon.pdf" target="_blank">Terms and Conditions</a>
+      </div>
+      <mat-error class="registration__error" *ngIf="termsControl.invalid && (termsControl.dirty || termsControl.touched) && termsControl.errors.required">
+        You should accept <strong>terms and conditions</strong>
+      </mat-error>
+    </div>
+
     <button mat-raised-button
+      class="registration__button"
       [disabled]="registrationForm.invalid && (registrationForm.dirty || registrationForm.touched)">
       Register
     </button>

@@ -6,16 +6,22 @@
 
   <bg-theme-picker></bg-theme-picker>
 
-  <nav class="header__nav">
-    <ng-container *ngIf="userLoggedIn; else signInBlock">
-      <a class="link" routerLink="/create-ticket">Create ticket</a>
-      <a class="link" routerLink="/issues">Issues</a>
-      <a class="link" (click)="logout($event)">Logout</a>
-    </ng-container>
-
-    <ng-template #signInBlock>
-      <a class="link" routerLink="/registration">Sign Up</a>
-      <a class="link" routerLink="/login">Sign In</a>
-    </ng-template>
-  </nav>
+  <div class="header__right">
+    <div class="header__top" *ngIf="username">
+      Signed in as: {{ username }}
+    </div>
+    <nav class="header__nav">
+      <ng-container *ngIf="userLoggedIn; else signInBlock">
+        <a class="link" routerLink="/create-ticket">Create ticket</a>
+        <a class="link" routerLink="/issues">Issues</a>
+        <a class="link" (click)="logout($event)">Logout</a>
+        <a class="link" (click)="removeCookie($event)">Remove</a>
+      </ng-container>
+  
+      <ng-template #signInBlock>
+        <a class="link" routerLink="/registration">Sign Up</a>
+        <a class="link" routerLink="/login">Sign In</a>
+      </ng-template>
+    </nav>
+  </div>
 </div>
