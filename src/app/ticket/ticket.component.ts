@@ -77,10 +77,22 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
   }
 
   get isAuthorOrAdmin(): boolean {
-    return !this.currentTicket || this.currentTicket.author.userId === this.userSrv.user.userId || this.userSrv.user.roleId === Roles.Admin;
+    if (!this.currentTicket) {
+      return true;
+    }
+
+    if (!this.userSrv.user) {
+      return false;
+    }
+
+    return this.currentTicket.author.userId === this.userSrv.user.userId || this.userSrv.user.roleId === Roles.Admin;
   }
 
   get isAssignee(): boolean {
+    if (!this.userSrv.user) {
+      return false;
+    }
+
     return this.currentTicket.assignee.userId === this.userSrv.user.userId;
   }
 
