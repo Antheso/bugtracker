@@ -37,9 +37,4 @@ export class HeaderComponent {
     });
   }
 
-  removeCookie(event: MouseEvent) {
-    event.preventDefault();
-    this.cookieSrv.delete(TOKEN_KEY);
-  }
-
 }
