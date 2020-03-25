@@ -11,6 +11,7 @@ import { ISelectOption, IProjectOption, IAssigneeOption } from '../core/interfac
 import { TicketService } from './ticket.service';
 import { ITask, IComment } from './interfaces';
 import { PreloaderService } from '../core/components';
+import { UserService } from '../core/services';
 
 @Component({
   selector: 'bg-ticket',
@@ -82,7 +83,8 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private ticketSrv: TicketService,
-    private preloaderSrv: PreloaderService
+    private preloaderSrv: PreloaderService,
+    private userSrv: UserService
   ) {
     this.projectOptions = this.ticketSrv.projectOptions$.getValue();
     this.priorityOptions = this.ticketSrv.priorityOptions$.getValue();
@@ -180,10 +182,7 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
   addComment(): void {
     const comment = {
       text: this.ticketForm.get('comment').value,
-      user: {
-        name: 'Bohdan',
-        userId: '5ab8d9db-a014-41cd-a485-79d79caaa9a1'
-      },
+      user: this.userSrv.user,
       timestamp: +new Date(),
       issueId: this.currentTicket.number
     };

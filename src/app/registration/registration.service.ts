@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ApiService } from '../core/services';
-import { IUser } from './interfaces';
+import { IFullUser } from './interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class RegistrationService {
     private api: ApiService
   ) { }
 
-  register(user: IUser): Observable<IUser> {
+  register(user: IFullUser): Observable<IFullUser> {
     return this.api.post('api/registration', user);
   }
 

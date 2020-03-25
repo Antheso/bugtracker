@@ -1,4 +1,5 @@
 import { ISelectOption } from '../core/interfaces';
+import { IUser } from '../core/services';
 
 export interface ITask {
   id: string;
@@ -18,10 +19,7 @@ export interface ITask {
 
 export interface IComment {
   timestamp: number;
-  user: {
-    name: string;
-    userId: string;
-  };
+  user: IUser;
   text: string;
   issueId: string;
 }

@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 
 import { ApiService } from './api.service';
 
-interface IUser {
+export interface IUser {
   firstName: string;
   userId: string;
   roleId: Roles;

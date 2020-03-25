@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { of } from 'rxjs';
+
 import { ApiService } from '../core/services';
 import { PreloaderService } from '../core/components';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'bg-login',
