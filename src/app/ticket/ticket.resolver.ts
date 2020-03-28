@@ -21,7 +21,6 @@ export class TicketResolver implements Resolve<Observable<[ITask, IComment[], ..
       return forkJoin(
         this.ticketSrv.fetchTask(route.params.ticketId),
         this.ticketSrv.fetchComments(route.params.ticketId),
-        this.ticketSrv.fetchProjects(),
         this.ticketSrv.fetchPriorities(),
         this.ticketSrv.fetchStatuses(),
         this.ticketSrv.fetchTypes(),
@@ -30,7 +29,6 @@ export class TicketResolver implements Resolve<Observable<[ITask, IComment[], ..
     }
 
     return forkJoin(
-      this.ticketSrv.fetchProjects(),
       this.ticketSrv.fetchPriorities(),
       this.ticketSrv.fetchStatuses(),
       this.ticketSrv.fetchTypes(),

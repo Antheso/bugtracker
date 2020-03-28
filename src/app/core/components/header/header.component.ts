@@ -33,6 +33,7 @@ export class HeaderComponent {
     event.preventDefault();
 
     this.api.post('api/logout', null).subscribe(() => {
+      this.userSrv.user$.next(void 0);
       this.router.navigateByUrl('/login');
     });
   }

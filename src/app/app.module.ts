@@ -30,6 +30,8 @@ import { IssuesComponent } from './issues';
 import { RegistrationComponent } from './registration';
 import { Page404Component } from './page404';
 import { Page403Component } from './page403';
+import { ProjectsComponent } from './projects';
+import { ProjectComponent } from './project';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -45,7 +47,9 @@ import { SharedModule } from './shared/shared.module';
       Page404Component,
       Page403Component,
       ErrorComponent,
-      PreloaderComponent
+      PreloaderComponent,
+      ProjectsComponent,
+      ProjectComponent
    ],
    imports: [
       BrowserModule,

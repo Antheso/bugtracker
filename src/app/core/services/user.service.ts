@@ -9,6 +9,7 @@ export interface IUser {
   firstName: string;
   userId: string;
   roleId: Roles;
+  email: string;
 }
 
 export enum Roles {
@@ -22,7 +23,7 @@ export enum Roles {
 })
 export class UserService {
 
-  private user$ = new BehaviorSubject<IUser>(void 0);
+  public user$ = new BehaviorSubject<IUser>(void 0);
 
   get user(): IUser {
     return this.user$.getValue();

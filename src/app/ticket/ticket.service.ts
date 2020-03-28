@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 
-import { ApiService } from '../core/services';
+import { ApiService, IUser } from '../core/services';
 import { ITask, IComment } from './interfaces';
-import { ISelectOption, IProjectOption, IAssigneeOption } from '../core/interfaces';
+import { ISelectOption } from '../core/interfaces';
 
 type IOptionsMap = Array<{
   from: string;
@@ -19,21 +19,14 @@ export class TicketService {
 
   public task$ = new BehaviorSubject<ITask>(void 0);
   public comments$ = new BehaviorSubject<IComment[]>([]);
-  public projectOptions$ = new BehaviorSubject<IProjectOption[]>([]);
   public priorityOptions$ = new BehaviorSubject<ISelectOption[]>([]);
   public statusOptions$ = new BehaviorSubject<ISelectOption[]>([]);
   public typeOptions$ = new BehaviorSubject<ISelectOption[]>([]);
-  public assigneeOptions$ = new BehaviorSubject<IAssigneeOption[]>([]);
+  public assigneeOptions$ = new BehaviorSubject<IUser[]>([]);
 
   constructor(
     private api: ApiService
   ) { }
-
-  fetchProjects(): Observable<IProjectOption[]> {
-    return this.api.get('api/projects').pipe(
-      tap(projects => this.projectOptions$.next(projects))
-    );
-  }
 
   fetchPriorities(): Observable<ISelectOption[]> {
     return this.api.get('api/priorities').pipe(
@@ -83,7 +76,7 @@ export class TicketService {
     );
   }
 
-  fetchAssignees(): Observable<IAssigneeOption[]> {
+  fetchAssignees(): Observable<IUser[]> {
     return this.api.get('api/users').pipe(
       tap(assignees => this.assigneeOptions$.next(assignees))
     );

@@ -7,11 +7,12 @@ import { MatSelect } from '@angular/material/select';
 import { Subject, ReplaySubject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators'
 
-import { ISelectOption, IProjectOption, IAssigneeOption } from '../core/interfaces';
+import { ISelectOption } from '../core/interfaces';
 import { TicketService } from './ticket.service';
 import { ITask, IComment } from './interfaces';
 import { PreloaderService } from '../core/components';
-import { UserService, Roles } from '../core/services';
+import { UserService, Roles, IUser } from '../core/services';
+import { ITableProject, ProjectsService } from '../projects';
 
 @Component({
   selector: 'bg-ticket',
@@ -19,15 +20,15 @@ import { UserService, Roles } from '../core/services';
   styleUrls: ['./ticket.component.scss']
 })
 export class TicketComponent implements AfterViewInit, OnDestroy {
-  projectOptions: IProjectOption[] = [];
+  projectOptions: ITableProject[] = [];
   priorityOptions: ISelectOption[] = [];
   stateOptions: ISelectOption[] = [];
   typeOptions: ISelectOption[] = [];
-  assigneeOptions: IAssigneeOption[] = [];
+  assigneeOptions: IUser[] = [];
   ticketForm: FormGroup;
   readonly = this.route.snapshot.data.readonly;
-  filteredProjectOptions: ReplaySubject<IProjectOption[]> = new ReplaySubject(1);
-  filteredAssigneeOptions: ReplaySubject<IAssigneeOption[]> = new ReplaySubject(1);
+  filteredProjectOptions: ReplaySubject<ITableProject[]> = new ReplaySubject(1);
+  filteredAssigneeOptions: ReplaySubject<IUser[]> = new ReplaySubject(1);
   comments: IComment[] = [];
   @ViewChild('assigneeSelect') assigneeSelect: MatSelect;
   @ViewChild('projectSelect') projectSelect: MatSelect;
@@ -104,9 +105,10 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
     private router: Router,
     private ticketSrv: TicketService,
     private preloaderSrv: PreloaderService,
-    private userSrv: UserService
+    private userSrv: UserService,
+    private projectsSrv: ProjectsService
   ) {
-    this.projectOptions = this.ticketSrv.projectOptions$.getValue();
+    this.projectOptions = this.projectsSrv.projects$.getValue();
     this.priorityOptions = this.ticketSrv.priorityOptions$.getValue();
     this.stateOptions = this.ticketSrv.statusOptions$.getValue();
     this.typeOptions = this.ticketSrv.typeOptions$.getValue();
@@ -145,7 +147,7 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
     this.initSearchSelect();
   }
 
-  displayProjectsFn(item: IProjectOption): string {
+  displayProjectsFn(item: ITableProject): string {
     return item && item.projectName ? item.projectName : '';
   }
 
@@ -286,12 +288,20 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
     this.filteredAssigneeOptions.pipe(
         take(1),
         takeUntil(this._onDestroy)
-      ).subscribe(() => this.assigneeSelect.compareWith = (a: IAssigneeOption, b: IAssigneeOption) => a && b && a.userId === b.userId);
+      ).subscribe(() => {
+        if (this.assigneeSelect) {
+          this.assigneeSelect.compareWith = (a: IUser, b: IUser) => a && b && a.userId === b.userId;
+        }
+      });
 
     this.filteredProjectOptions.pipe(
       take(1),
       takeUntil(this._onDestroy)
-    ).subscribe(() => this.projectSelect.compareWith = (a: IProjectOption, b: IProjectOption) => a && b && a.projectId === b.projectId);
+    ).subscribe(() => {
+      if (this.projectSelect) {
+        this.projectSelect.compareWith = (a: ITableProject, b: ITableProject) => a && b && a.projectId === b.projectId;
+      }
+    });
   }
 
   private filterAssignee(): void {
@@ -313,7 +323,7 @@ export class TicketComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  private filterProjects(): IProjectOption[] {
+  private filterProjects(): ITableProject[] {
     if (!this.projectOptions) {
       return;
     }

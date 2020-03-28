@@ -44,7 +44,7 @@ export class LoginComponent {
 
     this.preloaderSrv.isBusy$.next(true);
     this.api.post('api/login', this.loginForm.value, (err) => {
-      this.error = err.error;
+      this.error = err.error.error;
       this.passwordControl.reset();
       return of(void 0);
     }).subscribe((resp) => {

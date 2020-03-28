@@ -1,5 +1,6 @@
 <div class="ticket">
-  <form class="ticket__form"
+  <form *ngIf="projectOptions && projectOptions.length; else noProjectsBlock"
+    class="ticket__form"
     [formGroup]="ticketForm">
     <div class="ticket__content">
       <mat-form-field>
@@ -191,3 +192,7 @@
     </div>
   </form>
 </div>
+
+<ng-template #noProjectsBlock>
+  <h1>There is no projects where you are participate. Please contact to your project admin or create your own project.</h1>
+</ng-template>

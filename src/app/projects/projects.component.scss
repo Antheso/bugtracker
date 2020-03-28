@@ -1,0 +1,28 @@
+:host {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+.projects {
+  width: 100%;
+  padding: 60px 80px;
+
+  &__table {
+    width: 100%;
+    background: transparent;
+  }
+
+  &__field {
+    width: 100%;
+  }
+
+  &__item {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
+}

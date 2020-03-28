@@ -1,0 +1,144 @@
+<div class="project">
+  <form class="project__form" [formGroup]="projectForm">
+    <div class="project__controls">
+      <ng-container *ngIf="!readonly; else editBlock">
+        <button class="project__button" color="primary" mat-raised-button (click)="submit()"
+          [disabled]="projectForm.invalid && (projectForm.dirty || projectForm.touched)">
+          Save
+        </button>
+        <button [disabled]="routeReadonly && projectForm.pristine && projectForm.untouched" class="project__button" mat-raised-button (click)="cancel($event)">
+          Cancel
+        </button>
+      </ng-container>
+
+      <ng-template #editBlock>
+        <button class="project__button" color="primary" mat-raised-button (click)="edit()">
+          Edit
+        </button>
+      </ng-template>
+    </div>
+    <p class="project__error mat-error" *ngIf="error">{{ error }}</p>
+    <div class="project__top">
+
+      <mat-form-field class="project__field">
+        <mat-label>Project ID</mat-label>
+        <input matInput placeholder="Ex. Pizza" formControlName="projectId">
+        <mat-error *ngIf="projectIdControl.invalid && (projectIdControl.dirty || projectIdControl.touched) && projectIdControl.errors.required">
+          Project ID <strong>is required</strong>
+        </mat-error>
+        <mat-error *ngIf="projectIdControl.invalid && (projectIdControl.dirty || projectIdControl.touched) && projectIdControl.errors.minlength">
+          Project ID <strong>should contain at least {{ projectIdControl.errors.minlength.requiredLength }} symbols</strong>
+        </mat-error>
+        <mat-error *ngIf="projectIdControl.invalid && (projectIdControl.dirty || projectIdControl.touched) && projectIdControl.errors.maxlength">
+          Project ID <strong>should contain max {{ projectIdControl.errors.maxlength.requiredLength }} symbols</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="project__field">
+        <mat-label>Project name</mat-label>
+        <input matInput placeholder="Ex. Pizza" formControlName="projectName">
+
+        <mat-error *ngIf="projectNameControl.invalid && (projectNameControl.dirty || projectNameControl.touched) && projectNameControl.errors.required">
+          Project name <strong>is required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field class="project__field">
+      <mat-label>Project description</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+    </mat-form-field>
+
+    <mat-checkbox class="project__checkbox" formControlName="isPrivate">Private</mat-checkbox>
+  </form>
+
+  <div class="project__usersmanage" [formGroup]="userManageForm" *ngIf="userOptions.length">
+    <mat-form-field class="row__select">
+      <mat-label>User</mat-label>
+
+      <mat-select formControlName="user" #userSelect>
+        <mat-option>
+          <ngx-mat-select-search formControlName="userFilter" placeholderLabel="Find user"
+            noEntriesFoundLabel="No users found">
+          </ngx-mat-select-search>
+        </mat-option>
+
+        <mat-option *ngFor="let option of filteredUserOptions | async" [value]="option">
+          {{ option.firstName }}
+        </mat-option>
+      </mat-select>
+
+      <mat-error *ngIf="userControl.invalid && (userControl.dirty || userControl.touched) && userControl.errors.required">
+        User <strong>is required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="row__select">
+      <mat-label>
+        Role
+      </mat-label>
+
+      <mat-select formControlName="projectRoleId">
+        <mat-option *ngFor="let option of roleOptions" [value]="option.projectRoleId">
+          {{ option.projectRoleName }}
+        </mat-option>
+      </mat-select>
+
+      <mat-error *ngIf="projectRoleIdControl.invalid && (projectRoleIdControl.dirty || projectRoleIdControl.touched) && projectRoleIdControl.errors.required">
+        Role <strong>is required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <button class="project__button" color="primary" mat-raised-button (click)="addUser()" [disabled]="readonly || (userManageForm.invalid && (userManageForm.dirty || userManageForm.touched))">
+      Add
+    </button>
+  </div>
+
+  <div class="project__users">
+    <mat-form-field class="project__field">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Filter subject">
+    </mat-form-field>
+
+    <table class="project__table" mat-table [dataSource]="dataSource">
+      <!-- First name Column -->
+      <ng-container matColumnDef="firstName">
+        <th mat-header-cell *matHeaderCellDef> First Name </th>
+        <td mat-cell *matCellDef="let element"> {{ element.firstName }} </td>
+      </ng-container>
+
+      <!-- Last name Column -->
+      <ng-container matColumnDef="lastName">
+        <th mat-header-cell *matHeaderCellDef> Last Name </th>
+        <td mat-cell *matCellDef="let element"> {{ element.lastName }} </td>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let element"> {{ element.email }} </td>
+      </ng-container>
+
+      <!-- Role Column -->
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef> Role </th>
+        <td mat-cell *matCellDef="let element"> {{ getRoleNameById(element.projectRoleId) }} </td>
+      </ng-container>
+
+      <!-- Delete Column -->
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef> Delete </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button aria-label="Search"
+            [disabled]="readonly"
+            (click)="deleteUser(element.userId)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
