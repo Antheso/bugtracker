@@ -12,6 +12,12 @@ import { ProjectService } from './project.service';
 import { IUser, UserService } from '../core/services';
 import { IProjectRole } from '../projects';
 
+enum ProjectRoles {
+  Worker,
+  Manager,
+  Admin
+}
+
 @Component({
   selector: 'bg-project',
   templateUrl: './project.component.html',
@@ -66,6 +72,16 @@ export class ProjectComponent implements AfterViewInit, OnDestroy {
 
   get routeReadonly(): boolean {
     return this.route.snapshot.data.readonly;
+  }
+
+  get isAdmin(): boolean {
+    const proj = this.projectSrv.project$.getValue();
+    return proj && proj.currUserRole === ProjectRoles.Admin.toString();
+  }
+
+  get isManager(): boolean {
+    const proj = this.projectSrv.project$.getValue();
+    return proj && proj.currUserRole === ProjectRoles.Manager.toString();
   }
 
   constructor(

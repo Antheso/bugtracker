@@ -1,3 +1,4 @@
+<div class="email-verify" *ngIf="user && !user.isVerified">Confirm your email adress, click on the confirmation link sent to {{ user.email }}. <span *ngIf="!linkSent; else successBlock" (click)="resendConfirmation()">Resend confirmation link</span></div>
 <div class="header">
   <img src="/assets/images/logo.png"
     alt="Logo"
@@ -26,3 +27,7 @@
     </nav>
   </div>
 </div>
+
+<ng-template #successBlock>
+  <span>Link has been sent</span>
+</ng-template>

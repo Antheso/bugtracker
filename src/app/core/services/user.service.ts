@@ -10,6 +10,7 @@ export interface IUser {
   userId: string;
   roleId: Roles;
   email: string;
+  isVerified: boolean;
 }
 
 export enum Roles {

@@ -4,6 +4,7 @@ export interface IProject {
   description: string;
   isPrivate: boolean;
   users: IProjectUser[];
+  currUserRole?: string;
 }
 
 export interface IProjectUser {
